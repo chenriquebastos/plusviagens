@@ -45,9 +45,9 @@
     <div class="container">
         <h2>Calculadora de Diárias</h2>
         <label for="checkin">Data de Check-in:</label>
-        <input type="date" id="checkin" onclick="this.showPicker()" onblur="focusNext('checkout')">
+        <input type="date" id="checkin" onclick="this.showPicker()" oninput="focusNext('checkout')">
         <label for="checkout">Data de Check-out:</label>
-        <input type="date" id="checkout" onclick="this.showPicker()" onblur="focusNext('diaria')">
+        <input type="date" id="checkout" onclick="this.showPicker()" oninput="focusNext('diaria')">
         <label for="diaria">Valor da Diária (R$):</label>
         <input type="text" id="diaria" placeholder="0,00" oninput="formatarValor(this)" onblur="focusNext('calcular')">
         <button id="calcular" onclick="calcularDiarias()">Calcular Diárias</button>
@@ -98,6 +98,16 @@
 
             document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}<br>A hospedagem total custará: R$ ${totalCost.toFixed(2).replace('.', ',')}`;
         }
+
+        // Additional functionality for highlighting dates is complex and often requires a library
+        // Below is a simplified idea; for full implementation consider a library like jQuery UI Datepicker
+        document.getElementById('checkout').addEventListener('focus', function() {
+            const checkin = document.getElementById('checkin').value;
+            if (checkin) {
+                const checkinDate = new Date(checkin);
+                document.getElementById('checkout').setAttribute('min', checkinDate.toISOString().split('T')[0]);
+            }
+        });
     </script>
 </body>
 </html>
