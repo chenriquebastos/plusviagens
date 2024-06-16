@@ -96,7 +96,12 @@
             const diffTime = Math.abs(checkoutDate - checkinDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            diaria = parseFloat(diaria);
+            if (!diaria) {
+                diaria = 0;
+            } else {
+                diaria = parseFloat(diaria);
+            }
+
             const totalCost = diffDays * diaria;
 
             document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}<br>A hospedagem total custará: R$ ${totalCost.toFixed(2).replace('.', ',')}`;
