@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Diárias</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,17 +45,23 @@
 <body>
     <div class="container">
         <h2>Calculadora de Diárias</h2>
-        <label for="checkin">Data de Check-in:</label>
-        <input type="date" id="checkin" onclick="this.showPicker()" oninput="focusNext('checkout')">
-        <label for="checkout">Data de Check-out:</label>
-        <input type="date" id="checkout" onclick="this.showPicker()" oninput="focusNext('diaria')">
+        <label for="checkin">Data de Check-in e Check-out:</label>
+        <input type="text" id="daterange" placeholder="Selecione a data de check-in e check-out">
         <label for="diaria">Valor da Diária (R$):</label>
-        <input type="text" id="diaria" placeholder="0,00" oninput="formatarValor(this)" onblur="focusNext('calcular')">
+        <input type="text" id="diaria" placeholder="0,00" oninput="formatarValor(this)">
         <button id="calcular" onclick="calcularDiarias()">Calcular Diárias</button>
         <div class="result" id="result"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Inicializando o Flatpickr
+        flatpickr("#daterange", {
+            mode: "range",
+            dateFormat: "d/m/Y",
+            locale: "pt"
+        });
+
         function formatarValor(campo) {
             let valor = campo.value.replace(/\D/g, '');
             valor = (valor / 100).toFixed(2) + '';
@@ -63,27 +70,19 @@
             campo.value = valor;
         }
 
-        function focusNext(nextId) {
-            document.getElementById(nextId).focus();
-        }
-
         function calcularDiarias() {
-            const checkin = document.getElementById('checkin').value;
-            const checkout = document.getElementById('checkout').value;
+            const daterange = document.getElementById('daterange').value.split(" to ");
+            const checkin = daterange[0];
+            const checkout = daterange[1];
             let diaria = document.getElementById('diaria').value.replace(/\./g, '').replace(',', '.');
 
-            if (!checkin) {
-                document.getElementById('result').innerHTML = "Por favor, insira a data de check-in.";
+            if (!checkin || !checkout) {
+                document.getElementById('result').innerHTML = "Por favor, insira as datas de check-in e check-out.";
                 return;
             }
 
-            if (!checkout) {
-                document.getElementById('result').innerHTML = "Por favor, insira a data de check-out.";
-                return;
-            }
-
-            const checkinDate = new Date(checkin);
-            const checkoutDate = new Date(checkout);
+            const checkinDate = new Date(checkin.split("/").reverse().join("-"));
+            const checkoutDate = new Date(checkout.split("/").reverse().join("-"));
 
             if (checkinDate >= checkoutDate) {
                 document.getElementById('result').innerHTML = "A data de check-out deve ser posterior à data de check-in.";
@@ -98,16 +97,6 @@
 
             document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}<br>A hospedagem total custará: R$ ${totalCost.toFixed(2).replace('.', ',')}`;
         }
-
-        // Additional functionality for highlighting dates is complex and often requires a library
-        // Below is a simplified idea; for full implementation consider a library like jQuery UI Datepicker
-        document.getElementById('checkout').addEventListener('focus', function() {
-            const checkin = document.getElementById('checkin').value;
-            if (checkin) {
-                const checkinDate = new Date(checkin);
-                document.getElementById('checkout').setAttribute('min', checkinDate.toISOString().split('T')[0]);
-            }
-        });
     </script>
 </body>
 </html>
