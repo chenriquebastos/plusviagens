@@ -45,12 +45,12 @@
     <div class="container">
         <h2>Calculadora de Diárias</h2>
         <label for="checkin">Data de Check-in:</label>
-        <input type="date" id="checkin" onclick="this.showPicker()">
+        <input type="date" id="checkin" onclick="this.showPicker()" onblur="focusNext('checkout')">
         <label for="checkout">Data de Check-out:</label>
-        <input type="date" id="checkout" onclick="this.showPicker()">
+        <input type="date" id="checkout" onclick="this.showPicker()" onblur="focusNext('diaria')">
         <label for="diaria">Valor da Diária (R$):</label>
-        <input type="text" id="diaria" placeholder="0,00" oninput="formatarValor(this)">
-        <button onclick="calcularDiarias()">Calcular Diárias</button>
+        <input type="text" id="diaria" placeholder="0,00" oninput="formatarValor(this)" onblur="focusNext('calcular')">
+        <button id="calcular" onclick="calcularDiarias()">Calcular Diárias</button>
         <div class="result" id="result"></div>
     </div>
 
@@ -61,6 +61,10 @@
             valor = valor.replace(".", ",");
             valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
             campo.value = valor;
+        }
+
+        function focusNext(nextId) {
+            document.getElementById(nextId).focus();
         }
 
         function calcularDiarias() {
