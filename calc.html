@@ -64,16 +64,29 @@
         }
 
         function calcularDiarias() {
-            const checkin = new Date(document.getElementById('checkin').value);
-            const checkout = new Date(document.getElementById('checkout').value);
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
             let diaria = document.getElementById('diaria').value.replace(/\./g, '').replace(',', '.');
 
-            if (checkin >= checkout) {
+            if (!checkin) {
+                document.getElementById('result').innerHTML = "Por favor, insira a data de check-in.";
+                return;
+            }
+
+            if (!checkout) {
+                document.getElementById('result').innerHTML = "Por favor, insira a data de check-out.";
+                return;
+            }
+
+            const checkinDate = new Date(checkin);
+            const checkoutDate = new Date(checkout);
+
+            if (checkinDate >= checkoutDate) {
                 document.getElementById('result').innerHTML = "A data de check-out deve ser posterior à data de check-in.";
                 return;
             }
 
-            const diffTime = Math.abs(checkout - checkin);
+            const diffTime = Math.abs(checkoutDate - checkinDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
             diaria = parseFloat(diaria);
