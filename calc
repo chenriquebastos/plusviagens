@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Diárias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: calc(100% - 18px);
+        }
+        .container button {
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de Diárias</h2>
+        <label for="checkin">Data de Check-in:</label>
+        <input type="date" id="checkin">
+        <label for="checkout">Data de Check-out:</label>
+        <input type="date" id="checkout">
+        <button onclick="calcularDiarias()">Calcular Diárias</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calcularDiarias() {
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(document.getElementById('checkout').value);
+
+            if (checkin >= checkout) {
+                document.getElementById('result').innerHTML = "A data de check-out deve ser posterior à data de check-in.";
+                return;
+            }
+
+            const diffTime = Math.abs(checkout - checkin);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays} noite(s).`;
+        }
+    </script>
+</body>
+</html>
