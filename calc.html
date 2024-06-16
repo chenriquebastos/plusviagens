@@ -45,9 +45,9 @@
     <div class="container">
         <h2>Calculadora de Diárias</h2>
         <label for="checkin">Data de Check-in:</label>
-        <input type="date" id="checkin">
+        <input type="date" id="checkin" onclick="this.showPicker()">
         <label for="checkout">Data de Check-out:</label>
-        <input type="date" id="checkout">
+        <input type="date" id="checkout" onclick="this.showPicker()">
         <button onclick="calcularDiarias()">Calcular Diárias</button>
         <div class="result" id="result"></div>
     </div>
@@ -64,9 +64,8 @@
 
             const diffTime = Math.abs(checkout - checkin);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const nights = diffDays - 1;  // Subtrai uma noite, pois a última noite geralmente não é contada como diária
 
-            document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}<br>Quantidade de noites: ${nights}`;
+            document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}`;
         }
     </script>
 </body>
