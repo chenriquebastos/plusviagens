@@ -48,6 +48,8 @@
         <input type="date" id="checkin" onclick="this.showPicker()">
         <label for="checkout">Data de Check-out:</label>
         <input type="date" id="checkout" onclick="this.showPicker()">
+        <label for="diaria">Valor da Diária (R$):</label>
+        <input type="number" id="diaria" placeholder="0.00" step="0.01">
         <button onclick="calcularDiarias()">Calcular Diárias</button>
         <div class="result" id="result"></div>
     </div>
@@ -56,6 +58,7 @@
         function calcularDiarias() {
             const checkin = new Date(document.getElementById('checkin').value);
             const checkout = new Date(document.getElementById('checkout').value);
+            const diaria = parseFloat(document.getElementById('diaria').value);
 
             if (checkin >= checkout) {
                 document.getElementById('result').innerHTML = "A data de check-out deve ser posterior à data de check-in.";
@@ -65,7 +68,9 @@
             const diffTime = Math.abs(checkout - checkin);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}`;
+            const totalCost = diffDays * diaria;
+
+            document.getElementById('result').innerHTML = `Quantidade de diárias: ${diffDays}<br>A hospedagem total custará: R$ ${totalCost.toFixed(2)}`;
         }
     </script>
 </body>
