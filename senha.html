@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senhas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .password-output {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de Senhas</h1>
+        <label for="tamanho">Tamanho da senha:</label>
+        <input type="number" id="tamanho" min="1" max="100" value="12">
+
+        <label for="quantLetras">Quantidade de letras:</label>
+        <input type="number" id="quantLetras" min="0" value="6">
+
+        <label for="quantNumeros">Quantidade de números:</label>
+        <input type="number" id="quantNumeros" min="0" value="3">
+
+        <label for="quantEspeciais">Quantidade de caracteres especiais:</label>
+        <input type="number" id="quantEspeciais" min="0" value="3">
+
+        <label for="caracteresEspeciais">Caracteres especiais permitidos:</label>
+        <input type="text" id="caracteresEspeciais" value="!@#$%^&*()">
+
+        <label for="posicaoPalavra">Posição da palavra:</label>
+        <select id="posicaoPalavra">
+            <option value="inicio">Início</option>
+            <option value="meio">Meio</option>
+            <option value="final">Final</option>
+        </select>
+
+        <label for="palavra">Palavra personalizada:</label>
+        <input type="text" id="palavra">
+
+        <button id="gerarSenha">Gerar Senha</button>
+        <button id="copiarSenha">Copiar Senha</button>
+
+        <div class="password-output" id="senhaGerada"></div>
+    </div>
+
+    <script>
+        document.getElementById('gerarSenha').addEventListener('click', gerarSenha);
+        document.getElementById('copiarSenha').addEventListener('click', copiarSenha);
+
+        function gerarSenha() {
+            const tamanho = parseInt(document.getElementById('tamanho').value);
+            const quantLetras = parseInt(document.getElementById('quantLetras').value);
+            const quantNumeros = parseInt(document.getElementById('quantNumeros').value);
+            const quantEspeciais = parseInt(document.getElementById('quantEspeciais').value);
+            const caracteresEspeciais = document.getElementById('caracteresEspeciais').value;
+            const posicaoPalavra = document.getElementById('posicaoPalavra').value;
+            const palavra = document.getElementById('palavra').value;
+
+            const letrasMinusculas = 'abcdefghijklmnopqrstuvwxyz';
+            const letrasMaiusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numeros = '0123456789';
+            const caracteres = {
+                letras: letrasMinusculas + letrasMaiusculas,
+                numeros: numeros,
+                especiais: caracteresEspeciais
+            };
+
+            let senha = '';
+            let componentes = [
+                ...Array(quantLetras).fill('letras'),
+                ...Array(quantNumeros).fill('numeros'),
+                ...Array(quantEspeciais).fill('especiais')
+            ];
+
+            componentes = componentes.sort(() => Math.random() - 0.5);
+
+            componentes.forEach(tipo => {
+                const chars = caracteres[tipo];
+                senha += chars.charAt(Math.floor(Math.random() * chars.length));
+            });
+
+            senha = senha.split('').sort(() => Math.random() - 0.5).join('');
+
+            if (palavra) {
+                if (posicaoPalavra === 'inicio') {
+                    senha = palavra + senha;
+                } else if (posicaoPalavra === 'meio') {
+                    const meio = Math.floor(senha.length / 2);
+                    senha = senha.substring(0, meio) + palavra + senha.substring(meio);
+                } else {
+                    senha = senha + palavra;
+                }
+            }
+
+            document.getElementById('senhaGerada').textContent = senha;
+        }
+
+        function copiarSenha() {
+            const senha = document.getElementById('senhaGerada').textContent;
+            navigator.clipboard.writeText(senha).then(() => {
+                alert('Senha copiada para a área de transferência!');
+            });
+        }
+    </script>
+</body>
+</html>
