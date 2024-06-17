@@ -50,6 +50,13 @@
         <label for="caracteresEspeciais">Caracteres especiais permitidos:</label>
         <input type="text" id="caracteresEspeciais" value="!@#$%^&*()">
 
+        <label for="tipoLetras">Tipo de letras:</label>
+        <select id="tipoLetras">
+            <option value="todos">Todos</option>
+            <option value="maiusculas">Maiúsculas</option>
+            <option value="minusculas">Minúsculas</option>
+        </select>
+
         <label for="posicaoPalavra">Posição da palavra:</label>
         <select id="posicaoPalavra">
             <option value="inicio">Início</option>
@@ -76,14 +83,25 @@
             const quantNumeros = parseInt(document.getElementById('quantNumeros').value);
             const quantEspeciais = parseInt(document.getElementById('quantEspeciais').value);
             const caracteresEspeciais = document.getElementById('caracteresEspeciais').value;
+            const tipoLetras = document.getElementById('tipoLetras').value;
             const posicaoPalavra = document.getElementById('posicaoPalavra').value;
             const palavra = document.getElementById('palavra').value;
 
             const letrasMinusculas = 'abcdefghijklmnopqrstuvwxyz';
             const letrasMaiusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const numeros = '0123456789';
+            let letras = '';
+
+            if (tipoLetras === 'todos') {
+                letras = letrasMinusculas + letrasMaiusculas;
+            } else if (tipoLetras === 'maiusculas') {
+                letras = letrasMaiusculas;
+            } else {
+                letras = letrasMinusculas;
+            }
+
             const caracteres = {
-                letras: letrasMinusculas + letrasMaiusculas,
+                letras: letras,
                 numeros: numeros,
                 especiais: caracteresEspeciais
             };
