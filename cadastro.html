@@ -75,12 +75,8 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .result-container .copy-buttons {
+        .result-container .copy-button {
             margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .result-container .copy-buttons button {
             background-color: #292D96;
             color: #fff;
             padding: 10px;
@@ -88,14 +84,16 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            flex: 1;
-            margin-right: 10px;
+            width: 100%;
+            text-align: center;
         }
-        .result-container .copy-buttons button:last-child {
-            margin-right: 0;
-        }
-        .result-container .copy-buttons button:hover {
+        .result-container .copy-button:hover {
             background-color: #1f2372;
+        }
+        .result-container .copy-instruction {
+            margin-top: 10px;
+            color: #292D96;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -138,11 +136,8 @@
         <div class="result-container" id="resultContainer" style="display: none;">
             <label for="resultText">Resultado:</label>
             <textarea id="resultText" readonly></textarea>
-            <div class="copy-buttons">
-                <button onclick="copiarTexto()">Copiar Texto</button>
-                <button onclick="copiarTitulo()">Copiar Título</button>
-                <button onclick="copiarEmail()">Copiar Email</button>
-            </div>
+            <div class="copy-instruction">Clique no botão e cole no e-mail e envie para "tic@plus.tur.br" para que o TI possa cadastrar o cliente no TechTravel.</div>
+            <button class="copy-button" onclick="copiarTexto()">Copiar Texto</button>
         </div>
     </div>
 
@@ -183,9 +178,6 @@
 
             const saudacao = gerarSaudacao();
             const resultadoTexto = `${saudacao}, prezados,\n\nFavor cadastrar o cliente abaixo:\nCódigo Wintour: ${codigoWintour}\nMarcação: ${marcacaoTexto}\nFormas de pagamento liberadas para o cliente: ${pagamento}`;
-            const tituloEmail = `Cadastro de Cliente - ${codigoWintour}`;
-            const email = `tic@plus.tur.br`;
-
             document.getElementById('resultText').value = resultadoTexto;
             document.getElementById('resultContainer').style.display = 'block';
         }
@@ -194,17 +186,6 @@
             const resultText = document.getElementById('resultText');
             resultText.select();
             document.execCommand('copy');
-        }
-
-        function copiarTitulo() {
-            const codigoWintour = document.getElementById('codigoWintour').value;
-            const tituloEmail = `Cadastro de Cliente - ${codigoWintour}`;
-            navigator.clipboard.writeText(tituloEmail);
-        }
-
-        function copiarEmail() {
-            const email = `tic@plus.tur.br`;
-            navigator.clipboard.writeText(email);
         }
     </script>
 </body>
