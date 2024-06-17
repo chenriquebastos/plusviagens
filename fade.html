@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Desconto</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .form-container h1 {
+            color: #292D96;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #292D96;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            background-color: #292D96;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-group button:hover {
+            background-color: #1f2372;
+        }
+        .result-container {
+            margin-top: 20px;
+        }
+        .result-container p {
+            font-size: 16px;
+            color: #292D96;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Calculadora de Desconto</h1>
+        <div class="form-group">
+            <label for="servico">Tipo de Serviço:</label>
+            <select id="servico" required>
+                <option value="">Selecione...</option>
+                <option value="aereo">Aéreo</option>
+                <option value="hospedagem">Hospedagem e serviços relacionados</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="valorTarifa">Valor da Tarifa (R$):</label>
+            <input type="number" id="valorTarifa" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="calcularDesconto()">Calcular Desconto</button>
+        </div>
+        <div class="result-container" id="resultContainer" style="display: none;">
+            <p id="resultadoDesconto"></p>
+        </div>
+    </div>
+
+    <script>
+        function calcularDesconto() {
+            const servico = document.getElementById('servico').value;
+            const valorTarifa = parseFloat(document.getElementById('valorTarifa').value);
+
+            let desconto = 0;
+
+            if (servico === 'aereo') {
+                desconto = 0.05; // 5% de desconto
+            } else if (servico === 'hospedagem') {
+                desconto = 0.0815; // 8.15% de desconto
+            }
+
+            if (!isNaN(valorTarifa) && desconto > 0) {
+                const valorComDesconto = valorTarifa * (1 - desconto);
+                document.getElementById('resultadoDesconto').innerText = `O valor com desconto é: R$ ${valorComDesconto.toFixed(2)}`;
+                document.getElementById('resultContainer').style.display = 'block';
+            } else {
+                document.getElementById('resultadoDesconto').innerText = 'Por favor, selecione um tipo de serviço e insira um valor válido.';
+                document.getElementById('resultContainer').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
