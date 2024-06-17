@@ -54,10 +54,15 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            margin-right: 10px;
+            width: 48%;
+            box-sizing: border-box;
         }
         .form-group button:hover {
             background-color: #1f2372;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
         }
         .result-container {
             margin-top: 20px;
@@ -71,7 +76,7 @@
             justify-content: space-between;
             margin-bottom: 10px;
         }
-        .copy-button, .reset-button {
+        .copy-button {
             margin-top: 10px;
             background-color: #292D96;
             color: #fff;
@@ -83,7 +88,7 @@
             width: 100%;
             text-align: center;
         }
-        .copy-button:hover, .reset-button:hover {
+        .copy-button:hover {
             background-color: #1f2372;
         }
         .copy-feedback {
@@ -109,7 +114,7 @@
             <label for="valorTarifa">Valor da Tarifa (R$):</label>
             <input type="text" id="valorTarifa" required oninput="formatarValor(this)">
         </div>
-        <div class="form-group">
+        <div class="form-group button-group">
             <button type="button" onclick="calcularDesconto()">Calcular Desconto</button>
             <button type="button" class="reset-button" onclick="refazerCalculo()">Refazer</button>
         </div>
