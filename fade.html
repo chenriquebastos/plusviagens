@@ -172,21 +172,33 @@
             const valorDesconto = document.getElementById('valorDesconto').innerText;
             const valorComDesconto = document.getElementById('valorComDesconto').innerText;
 
-            const resultado = `<b>Detalhamento de valores com aplicação do desconto:</b>\n` +
-                `<b>Valor sem aplicação do desconto:</b> ${valorSemDesconto}\n` +
-                `<b>Desconto (${porcentagemDesconto}):</b> ${valorDesconto}\n` +
+            const resultado = `<b>Detalhamento de valores com aplicação do desconto:</b><br>` +
+                `<b>Valor sem aplicação do desconto:</b> ${valorSemDesconto}<br>` +
+                `<b>Desconto (${porcentagemDesconto}):</b> ${valorDesconto}<br>` +
                 `<b>Valor com aplicação do desconto:</b> ${valorComDesconto}`;
 
-            const tempElement = document.createElement('textarea');
-            tempElement.value = resultado;
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = resultado;
             document.body.appendChild(tempElement);
-            tempElement.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempElement);
 
-            const feedback = document.getElementById('copyFeedback');
-            feedback.innerText = 'Resultado copiado com sucesso!';
-            feedback.style.display = 'block';
+            const range = document.createRange();
+            range.selectNodeContents(tempElement);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            try {
+                document.execCommand('copy');
+                const feedback = document.getElementById('copyFeedback');
+                feedback.innerText = 'Resultado copiado com sucesso!';
+                feedback.style.display = 'block';
+            } catch (err) {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.innerText = 'Falha ao copiar o resultado.';
+                feedback.style.display = 'block';
+            }
+
+            document.body.removeChild(tempElement);
         }
     </script>
 </body>
