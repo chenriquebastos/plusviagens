@@ -157,6 +157,14 @@
             }
         });
 
+        function gerarSaudacao() {
+            const now = new Date();
+            const hour = now.getHours();
+            if (hour < 12) return 'Bom dia';
+            if (hour < 18) return 'Boa tarde';
+            return 'Boa noite';
+        }
+
         function gerarResultado() {
             const codigoWintour = document.getElementById('codigoWintour').value;
             const marcacao = document.getElementById('marcacao').value;
@@ -164,16 +172,17 @@
 
             let marcacaoTexto = '';
             if (marcacao === 'DU') {
-                marcacaoTexto = 'Marcação DU é automática da companhia aérea.';
+                marcacaoTexto = 'DU';
             } else if (marcacao === 'FEE%') {
                 const percentualValor = document.getElementById('percentualValor').value;
-                marcacaoTexto = `Marcação FEE: ${percentualValor}%.`;
+                marcacaoTexto = `FEE (%): ${percentualValor}%`;
             } else if (marcacao === 'FEE$') {
                 const monetarioValor = document.getElementById('monetarioValor').value;
-                marcacaoTexto = `Marcação FEE: R$ ${parseFloat(monetarioValor).toFixed(2)}.`;
+                marcacaoTexto = `FEE (Monetário): R$ ${parseFloat(monetarioValor).toFixed(2)}`;
             }
 
-            const resultadoTexto = `Código Wintour: ${codigoWintour}\n${marcacaoTexto}\nFormas de pagamento liberadas: ${pagamento}`;
+            const saudacao = gerarSaudacao();
+            const resultadoTexto = `${saudacao}, prezados,\n\nFavor cadastrar o cliente abaixo:\nCódigo Wintour: ${codigoWintour}\nMarcação: ${marcacaoTexto}\nFormas de pagamento liberadas para o cliente: ${pagamento}`;
             const tituloEmail = `Cadastro de Cliente - ${codigoWintour}`;
             const email = `tic@plus.tur.br`;
 
