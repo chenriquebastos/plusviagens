@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .form-container h1 {
+            color: #292D96;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #292D96;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-group .conditional {
+            display: none;
+            margin-top: 10px;
+        }
+        .form-group .conditional input {
+            width: calc(100% - 20px);
+        }
+        .form-group button {
+            background-color: #292D96;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-group button:hover {
+            background-color: #1f2372;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Cadastro de Cliente</h1>
+        <div class="form-group">
+            <label for="codigoWintour">Código Wintour:</label>
+            <input type="number" id="codigoWintour" required>
+        </div>
+        <div class="form-group">
+            <label for="marcacao">Marcação:</label>
+            <select id="marcacao" required>
+                <option value="">Selecione...</option>
+                <option value="DU">DU</option>
+                <option value="FEE%">FEE (%)</option>
+                <option value="FEE$">FEE (Monetário)</option>
+            </select>
+            <div id="percentual" class="conditional">
+                <label for="percentualValor">Valor (%):</label>
+                <input type="number" id="percentualValor">
+            </div>
+            <div id="monetario" class="conditional">
+                <label for="monetarioValor">Valor (R$):</label>
+                <input type="number" step="0.01" id="monetarioValor">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pagamento">Formas de Pagamento Liberadas:</label>
+            <select id="pagamento" required>
+                <option value="">Selecione...</option>
+                <option value="FATURADO">FATURADO</option>
+                <option value="CARTÃO DE CRÉDITO">CARTÃO DE CRÉDITO</option>
+                <option value="TODOS">TODOS</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="gerarEmail()">Gerar Email</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('marcacao').addEventListener('change', function() {
+            document.getElementById('percentual').style.display = 'none';
+            document.getElementById('monetario').style.display = 'none';
+            if (this.value === 'FEE%') {
+                document.getElementById('percentual').style.display = 'block';
+            } else if (this.value === 'FEE$') {
+                document.getElementById('monetario').style.display = 'block';
+            }
+        });
+
+        function gerarEmail() {
+            const codigoWintour = document.getElementById('codigoWintour').value;
+            const marcacao = document.getElementById('marcacao').value;
+            const pagamento = document.getElementById('pagamento').value;
+
+            let marcacaoTexto = '';
+            if (marcacao === 'DU') {
+                marcacaoTexto = 'Marcação DU é automática da companhia aérea.';
+            } else if (marcacao === 'FEE%') {
+                const percentualValor = document.getElementById('percentualValor').value;
+                marcacaoTexto = `Marcação FEE: ${percentualValor}%.`;
+            } else if (marcacao === 'FEE$') {
+                const monetarioValor = document.getElementById('monetarioValor').value;
+                marcacaoTexto = `Marcação FEE: R$ ${parseFloat(monetarioValor).toFixed(2)}.`;
+            }
+
+            const corpoEmail = `Código Wintour: ${codigoWintour}\n${marcacaoTexto}\nFormas de pagamento liberadas: ${pagamento}`;
+
+            const mailtoLink = `mailto:tic@plus.tur.br?subject=Cadastro de Cliente - ${codigoWintour}&body=${encodeURIComponent(corpoEmail)}`;
+            window.open(mailtoLink, '_blank');
+        }
+    </script>
+</body>
+</html>
