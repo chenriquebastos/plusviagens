@@ -106,8 +106,8 @@
             <input type="number" id="codigoWintour" required>
         </div>
         <div class="form-group">
-            <label for="marcacao">Marcação:</label>
-            <select id="marcacao" required>
+            <label for="tipoTaxa">Tipo de Taxa:</label>
+            <select id="tipoTaxa" required>
                 <option value="">Selecione...</option>
                 <option value="DU">DU</option>
                 <option value="FEE%">FEE (%)</option>
@@ -143,7 +143,7 @@
     </div>
 
     <script>
-        document.getElementById('marcacao').addEventListener('change', function() {
+        document.getElementById('tipoTaxa').addEventListener('change', function() {
             document.getElementById('percentual').style.display = 'none';
             document.getElementById('monetario').style.display = 'none';
             if (this.value === 'FEE%') {
@@ -163,22 +163,22 @@
 
         function gerarResultado() {
             const codigoWintour = document.getElementById('codigoWintour').value;
-            const marcacao = document.getElementById('marcacao').value;
+            const tipoTaxa = document.getElementById('tipoTaxa').value;
             const pagamento = document.getElementById('pagamento').value;
 
-            let marcacaoTexto = '';
-            if (marcacao === 'DU') {
-                marcacaoTexto = 'DU';
-            } else if (marcacao === 'FEE%') {
+            let tipoTaxaTexto = '';
+            if (tipoTaxa === 'DU') {
+                tipoTaxaTexto = 'DU';
+            } else if (tipoTaxa === 'FEE%') {
                 const percentualValor = document.getElementById('percentualValor').value;
-                marcacaoTexto = `FEE (%): ${percentualValor}%`;
-            } else if (marcacao === 'FEE$') {
+                tipoTaxaTexto = `FEE (%): ${percentualValor}%`;
+            } else if (tipoTaxa === 'FEE$') {
                 const monetarioValor = document.getElementById('monetarioValor').value;
-                marcacaoTexto = `FEE (Monetário): R$ ${parseFloat(monetarioValor).toFixed(2)}`;
+                tipoTaxaTexto = `FEE (Monetário): R$ ${parseFloat(monetarioValor).toFixed(2)}`;
             }
 
             const saudacao = gerarSaudacao();
-            const resultadoTexto = `${saudacao}, prezados,\n\nFavor cadastrar o cliente abaixo:\nCódigo Wintour: ${codigoWintour}\nMarcação: ${marcacaoTexto}\nFormas de pagamento liberadas para o cliente: ${pagamento}`;
+            const resultadoTexto = `${saudacao}, prezados,\n\nFavor cadastrar o cliente abaixo:\nCódigo Wintour: ${codigoWintour}\nTipo de Taxa: ${tipoTaxaTexto}\nFormas de pagamento liberadas para o cliente: ${pagamento}`;
             document.getElementById('resultText').value = resultadoTexto;
             document.getElementById('resultContainer').style.display = 'block';
         }
