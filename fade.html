@@ -172,13 +172,13 @@
             const valorDesconto = document.getElementById('valorDesconto').innerText;
             const valorComDesconto = document.getElementById('valorComDesconto').innerText;
 
-            const resultado = `<b>Detalhamento de valores com aplicação do desconto:</b><br>` +
+            const resultadoHTML = `<b>Detalhamento de valores com aplicação do desconto:</b><br>` +
                 `<b>Valor sem aplicação do desconto:</b> ${valorSemDesconto}<br>` +
                 `<b>Desconto (${porcentagemDesconto}):</b> ${valorDesconto}<br>` +
                 `<b>Valor com aplicação do desconto:</b> ${valorComDesconto}`;
 
             const tempElement = document.createElement('div');
-            tempElement.innerHTML = resultado;
+            tempElement.innerHTML = resultadoHTML;
             document.body.appendChild(tempElement);
 
             const range = document.createRange();
