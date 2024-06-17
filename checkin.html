@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Check-in</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .site-main {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .entry-title {
+            color: #292D96;
+            font-size: 24px;
+            margin: 0;
+        }
+        .page-content {
+            color: #292D96;
+            font-size: 16px;
+        }
+        .page-content p {
+            margin: 0 0 20px;
+        }
+        .dropdowncontent-dropdown {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <main id="content" class="site-main post-11856 page type-page status-publish has-post-thumbnail hentry">
+        <header class="page-header">
+            <h1 class="entry-title">Web Check-in</h1>
+        </header>
+        <div class="page-content">
+            <p>Ofereça ao seu cliente a possibilidade de check-in através da internet.<br>
+            Selecione a companhia e acesse o site para realizar o serviço.</p>
+            <select id="checkin" name="dropdown-content" class="bases-select-box dropdowncontent-dropdown">
+                <option value="">Selecione a Companhia Aérea…</option>
+                <option value="https://checkin.si.amadeus.net/static/PRD/Z8/#/identification">Amaszonas</option>
+                <option value="https://www.aerolineas.com.ar/pt-br/reservasservicios/webcheckindx?zrdct=true">Aerolíneas</option>
+                <option value="https://aeromexico.com/pt-br/check-in/">Aeromexico</option>
+                <option value="http://www.aircanada.com.br/info/default.aspx?pageid=362">Air Canada</option>
+                <option value="https://www.aireuropa.com/pt/voos#/check-in">Air Europa</option>
+                <option value="https://wwws.airfrance.com.br/check-in">Air France</option>
+                <option value="https://www.aa.com.br/homePage.do?locale=pt_BR">American Airlines</option>
+                <option value="https://www.avianca.com/br/en/electronic-services/web-check-in">Avianca</option>
+                <option value="https://www.voeazul.com.br/para-sua-viagem/check-in-mobile">Azul</option>
+                <option value="http://www.britishairways.com/travel/olcilandingpageauthreq/public/pt_pt#">British</option>
+                <option value="https://www.copaair.com/pt/web/br">Copa</option>
+                <option value="https://pt.delta.com/mytrips/">Delta</option>
+                <option value="https://www.emirates.com/br/portuguese/?page=/english/">Emirates</option>
+                <option value="http://checkininternet.voegol.com.br/home">GOL</option>
+                <option value="https://www.iberia.com/br/autocheckin-online.pt/?language=pt&amp;market=br#/ibcose">Iberia</option>
+                <option value="https://itapemirim.ttinteractive.com.br/empresa/checkinweb/search.asp">Itapemirim</option>
+                <option value="https://checkin.si.amadeus.net/static/PRD/JL/#/identification">JAL</option>
+                <option value="https://www.klm.com/ams/checkin/web/kl/br/br">KLM</option>
+                <option value="https://www.koreanair.com/global/pt_br/booking/check-in-gate.html">Korean Air</option>
+                <option value="https://www.latam.com/pt_br/apps/personas/checkinunified">LATAM</option>
+                <option value="https://www.lufthansa.com/pt/pt/online-check-in">Lufthansa</option>
+                <option value="https://www.qantas.com/br/en.html?tabId=check-in">Qantas</option>
+                <option value="https://cki.qatarairways.com/cki/dashboard?qore=y">Qatar</option>
+                <option value="https://www.skyairline.com/brasil/check-in">SKY Airline</option>
+                <option value="https://www.flysaa.com/manage-fly/manage/check-in/on-line-check-in">South African </option>
+                <option value="http://www.swiss.com/br/pt/preparar/check-in/check-in-online?1349619697051&amp;Country=BR">Swiss</option>
+                <option value="https://www.royalairmaroc.com/booking/check-in">Royal Air Marroc</option>
+                <option value="https://checkin.si.amadeus.net/static/PRD/DT/#/identification">TAAG</option>
+                <!-- <option value="http://www7.tame.com.ec/iCheck/Views/Home.aspx">Tame</option> --> <!-- Pagina com defeito -->
+                <option value="https://www.flytap.com/pt-pt/check-in-voo">TAP</option>
+                <option value="https://www.turkishairlines.com/pt-br/flights/manage-booking/">Turkish</option>
+                <option value="https://www.united.com/pt/br/checkin">United</option>
+                <option value="https://www.voepass.com.br/empresa/checkinweb/search.asp">VoePass</option>
+            </select>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var combo = document.getElementById('checkin');
+            combo.onchange = function () {
+                if (this.value != '') window.open(this.value);
+            };
+        };
+    </script>
+</body>
+</html>
