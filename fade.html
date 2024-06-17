@@ -65,6 +65,11 @@
             font-size: 16px;
             color: #292D96;
         }
+        .result-container .result-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -80,20 +85,41 @@
         </div>
         <div class="form-group">
             <label for="valorTarifa">Valor da Tarifa (R$):</label>
-            <input type="number" id="valorTarifa" step="0.01" required>
+            <input type="text" id="valorTarifa" required oninput="formatarValor(this)">
         </div>
         <div class="form-group">
             <button type="button" onclick="calcularDesconto()">Calcular Desconto</button>
         </div>
         <div class="result-container" id="resultContainer" style="display: none;">
-            <p id="resultadoDesconto"></p>
+            <div class="result-line">
+                <span>Valor sem desconto:</span>
+                <span id="valorSemDesconto"></span>
+            </div>
+            <div class="result-line">
+                <span>Desconto (<span id="porcentagemDesconto"></span>):</span>
+                <span id="valorDesconto"></span>
+            </div>
+            <div class="result-line">
+                <span>Valor com desconto:</span>
+                <span id="valorComDesconto"></span>
+            </div>
         </div>
     </div>
 
     <script>
+        function formatarValor(input) {
+            let valor = input.value.replace(/\D/g, '');
+            valor = (valor / 100).toFixed(2) + '';
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            input.value = valor;
+        }
+
         function calcularDesconto() {
             const servico = document.getElementById('servico').value;
-            const valorTarifa = parseFloat(document.getElementById('valorTarifa').value);
+            let valorTarifa = document.getElementById('valorTarifa').value.replace(/\./g, '').replace(',', '.');
+
+            valorTarifa = parseFloat(valorTarifa);
 
             let desconto = 0;
 
@@ -104,12 +130,16 @@
             }
 
             if (!isNaN(valorTarifa) && desconto > 0) {
-                const valorComDesconto = valorTarifa * (1 - desconto);
-                document.getElementById('resultadoDesconto').innerText = `O valor com desconto é: R$ ${valorComDesconto.toFixed(2)}`;
+                const valorDesconto = valorTarifa * desconto;
+                const valorComDesconto = valorTarifa - valorDesconto;
+
+                document.getElementById('valorSemDesconto').innerText = `R$ ${valorTarifa.toFixed(2).replace('.', ',')}`;
+                document.getElementById('porcentagemDesconto').innerText = `${(desconto * 100).toFixed(2)}%`;
+                document.getElementById('valorDesconto').innerText = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
+                document.getElementById('valorComDesconto').innerText = `R$ ${valorComDesconto.toFixed(2).replace('.', ',')}`;
                 document.getElementById('resultContainer').style.display = 'block';
             } else {
-                document.getElementById('resultadoDesconto').innerText = 'Por favor, selecione um tipo de serviço e insira um valor válido.';
-                document.getElementById('resultContainer').style.display = 'block';
+                document.getElementById('resultContainer').style.display = 'none';
             }
         }
     </script>
