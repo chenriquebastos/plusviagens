@@ -20,8 +20,8 @@ h1 {
 }
 
 textarea {
-    width: 100%;
-    padding: 1rem;
+    width: calc(100% - 2rem); /* Adiciona um padding proporcional */
+    padding: 1rem; /* Adiciona espaço interno */
     margin: 1rem 0;
 }
 
