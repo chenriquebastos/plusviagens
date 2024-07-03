@@ -5,9 +5,9 @@ function processNames() {
     const processedData = [];
     const maxLength = 30;
 
-    // Function to remove special characters
+    // Function to remove special characters, trim spaces and remove tabs
     const normalize = (str) => {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\t/g, '').trim();
     };
 
     namesInput.forEach((name, index) => {
