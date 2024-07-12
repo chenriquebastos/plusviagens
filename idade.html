@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Idade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calculadora {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .calculadora input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .calculadora button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .calculadora button:hover {
+            background-color: #0056b3;
+        }
+        .resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333333;
+        }
+        .classificacao {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculadora">
+        <h1>Calculadora de Idade</h1>
+        <input type="date" id="dataNascimento" placeholder="Digite sua data de nascimento">
+        <button onclick="calcularIdade()">Calcular Idade</button>
+        <div class="resultado" id="resultado"></div>
+        <div class="classificacao">
+            <h2>Classificação de Idade (ANAC)</h2>
+            <p><strong>Bebê (Infant):</strong> de 0 a 1 ano e 11 meses (menos de 2 anos).</p>
+            <p><strong>Criança (Child):</strong> de 2 anos a 11 anos e 11 meses (menos de 12 anos).</p>
+            <p><strong>Adulto (Adult):</strong> 12 anos ou mais.</p>
+            <p>Essas classificações são utilizadas pelas companhias aéreas para determinar regras de tarifa, assentos e outras políticas relacionadas ao transporte de passageiros.</p>
+        </div>
+    </div>
+
+    <script>
+        function calcularIdade() {
+            const dataNascimento = document.getElementById('dataNascimento').value;
+            if (!dataNascimento) {
+                document.getElementById('resultado').innerText = 'Por favor, digite sua data de nascimento.';
+                return;
+            }
+
+            const nascimento = new Date(dataNascimento);
+            const hoje = new Date();
+            
+            let idadeAnos = hoje.getFullYear() - nascimento.getFullYear();
+            let idadeMeses = hoje.getMonth() - nascimento.getMonth();
+
+            if (idadeMeses < 0) {
+                idadeAnos--;
+                idadeMeses += 12;
+            }
+
+            const resultado = document.getElementById('resultado');
+            resultado.innerText = `${idadeAnos} anos e ${idadeMeses} meses`;
+
+            if (idadeAnos < 2) {
+                resultado.innerText += ' (Bebê)';
+            } else if (idadeAnos < 12) {
+                resultado.innerText += ' (Criança)';
+            } else {
+                resultado.innerText += ' (Adulto)';
+            }
+        }
+    </script>
+</body>
+</html>
