@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Cotação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Gerador de Cotação</h1>
+            <p>Preencha os dados abaixo para gerar a tabela de cotação.</p>
+        </header>
+
+        <!-- Menu de seleção de serviço -->
+        <div class="form-group">
+            <label for="tipoServico">
+                <i class="fas fa-list"></i> Tipo de Serviço:
+            </label>
+            <select id="tipoServico" required>
+                <option value="aereo">Aéreo</option>
+                <option value="transfer">Transfer</option>
+                <option value="hotel">Hotel</option>
+            </select>
+        </div>
+
+        <!-- Formulário Aéreo -->
+        <section id="aereoFormSection" class="form-section">
+            <h2>Dados do Aéreo</h2>
+            <form id="aereoForm">
+                <!-- Companhia Aérea -->
+                <div class="form-group">
+                    <label for="companhiaAerea">
+                        <i class="fas fa-plane"></i> Companhia Aérea:
+                    </label>
+                    <select id="companhiaAerea" required>
+                        <option value="GOL">GOL</option>
+                        <option value="LATAM">LATAM</option>
+                        <option value="AZUL">AZUL</option>
+                        <option value="VOEPASS">VOEPASS</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
+                    <input type="text" id="outraCompanhia" class="hidden" placeholder="Digite o nome da companhia">
+                </div>
+
+                <!-- Quantidade de Passageiros e Valor por Passageiro -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantidadePassageiros">
+                            <i class="fas fa-users"></i> Quantidade de Passageiros:
+                        </label>
+                        <input type="number" id="quantidadePassageiros" placeholder="Ex: 2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="valorPorPassageiro">
+                            <i class="fas fa-dollar-sign"></i> Valor por Passageiro:
+                        </label>
+                        <input type="number" id="valorPorPassageiro" step="0.01" placeholder="Ex: 500.00" required>
+                    </div>
+                </div>
+
+                <!-- Valor Total -->
+                <div class="form-group">
+                    <label for="valorTotal">
+                        <i class="fas fa-calculator"></i> Valor Total:
+                    </label>
+                    <input type="number" id="valorTotal" readonly>
+                </div>
+
+                <!-- Origem e Destino -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="origem">
+                            <i class="fas fa-map-marker-alt"></i> Origem:
+                        </label>
+                        <input type="text" id="origem" placeholder="Ex: São Paulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="destino">
+                            <i class="fas fa-map-marker-alt"></i> Destino:
+                        </label>
+                        <input type="text" id="destino" placeholder="Ex: Rio de Janeiro" required>
+                    </div>
+                </div>
+
+                <!-- Tipo de Trecho -->
+                <div class="form-group">
+                    <label for="tipoTrecho">
+                        <i class="fas fa-exchange-alt"></i> Tipo de Trecho:
+                    </label>
+                    <select id="tipoTrecho">
+                        <option value="ida">Somente Ida</option>
+                        <option value="idaVolta">Ida e Volta</option>
+                    </select>
+                </div>
+
+                <!-- Campos para Ida -->
+                <div id="idaFields">
+                    <h3><i class="fas fa-plane-departure"></i> Trecho de Ida</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="numeroVooIda">
+                                <i class="fas fa-ticket-alt"></i> Número do Voo:
+                            </label>
+                            <input type="text" id="numeroVooIda" placeholder="Ex: 1234" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataDecolagemIda">
+                                <i class="fas fa-calendar-alt"></i> Data e Horário da Decolagem:
+                            </label>
+                            <div class="datetime-container">
+                                <input type="date" id="dataDecolagemIda" required>
+                                <input type="time" id="horaDecolagemIda" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataPousoIda">
+                                <i class="fas fa-calendar-alt"></i> Data e Horário do Pouso:
+                            </label>
+                            <div class="datetime-container">
+                                <input type="date" id="dataPousoIda" required>
+                                <input type="time" id="horaPousoIda" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tarifaIda">
+                                <i class="fas fa-tag"></i> Tarifa:
+                            </label>
+                            <input type="text" id="tarifaIda" placeholder="Ex: Econômica" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campos para Volta (inicialmente ocultos) -->
+                <div id="voltaFields" class="hidden">
+                    <h3><i class="fas fa-plane-arrival"></i> Trecho de Volta</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="numeroVooVolta">
+                                <i class="fas fa-ticket-alt"></i> Número do Voo:
+                            </label>
+                            <input type="text" id="numeroVooVolta" placeholder="Ex: 5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="dataDecolagemVolta">
+                                <i class="fas fa-calendar-alt"></i> Data e Horário da Decolagem:
+                            </label>
+                            <div class="datetime-container">
+                                <input type="date" id="dataDecolagemVolta">
+                                <input type="time" id="horaDecolagemVolta">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataPousoVolta">
+                                <i class="fas fa-calendar-alt"></i> Data e Horário do Pouso:
+                            </label>
+                            <div class="datetime-container">
+                                <input type="date" id="dataPousoVolta">
+                                <input type="time" id="horaPousoVolta">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tarifaVolta">
+                                <i class="fas fa-tag"></i> Tarifa:
+                            </label>
+                            <input type="text" id="tarifaVolta" placeholder="Ex: Executiva">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observações e Prazo -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="observacoes">
+                            <i class="fas fa-comment"></i> Observações:
+                        </label>
+                        <textarea id="observacoes" rows="2" placeholder="Ex: Sem bagagem"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="prazo">
+                            <i class="fas fa-clock"></i> Prazo:
+                        </label>
+                        <input type="date" id="prazo" required>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="form-row">
+                    <button type="submit">
+                        <i class="fas fa-table"></i> Gerar Tabela
+                    </button>
+                    <button type="button" id="limparFormulario">
+                        <i class="fas fa-eraser"></i> Limpar Formulário
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Formulário Transfer -->
+        <section id="transferFormSection" class="form-section hidden">
+            <h2>Dados do Transfer</h2>
+            <form id="transferForm">
+                <!-- Empresa -->
+                <div class="form-group">
+                    <label for="empresaTransfer">
+                        <i class="fas fa-building"></i> Empresa:
+                    </label>
+                    <input type="text" id="empresaTransfer" placeholder="Ex: Empresa XYZ" required>
+                </div>
+
+                <!-- Tipo de Veículo -->
+                <div class="form-group">
+                    <label for="tipoVeiculo">
+                        <i class="fas fa-car"></i> Tipo de Veículo:
+                    </label>
+                    <select id="tipoVeiculo" required>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Van">Van</option>
+                        <option value="Micro-ônibus">Micro-ônibus</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
+                    <input type="text" id="outroTipoVeiculo" class="hidden" placeholder="Digite o tipo de veículo">
+                </div>
+
+                <!-- Quantidade de Passageiros -->
+                <div class="form-group">
+                    <label for="quantidadePassageirosTransfer">
+                        <i class="fas fa-users"></i> Quantidade de Passageiros:
+                    </label>
+                    <input type="number" id="quantidadePassageirosTransfer" placeholder="Ex: 4" required>
+                </div>
+
+                <!-- Valor do Transfer -->
+                <div class="form-group">
+                    <label for="valorTransfer">
+                        <i class="fas fa-dollar-sign"></i> Valor do Transfer:
+                    </label>
+                    <input type="number" id="valorTransfer" step="0.01" placeholder="Ex: 200.00" required>
+                </div>
+
+                <!-- Roteiro -->
+                <div class="form-group">
+                    <label for="roteiroTransfer">
+                        <i class="fas fa-route"></i> Roteiro:
+                    </label>
+                    <input type="text" id="roteiroTransfer" placeholder="Ex: Aeroporto -> Hotel" required>
+                </div>
+
+                <!-- Data e Horário -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataTransfer">
+                            <i class="fas fa-calendar-alt"></i> Data:
+                        </label>
+                        <input type="date" id="dataTransfer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horaTransfer">
+                            <i class="fas fa-clock"></i> Horário:
+                        </label>
+                        <input type="time" id="horaTransfer" required>
+                    </div>
+                </div>
+
+                <!-- Observações e Prazo -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="observacoesTransfer">
+                            <i class="fas fa-comment"></i> Observações:
+                        </label>
+                        <textarea id="observacoesTransfer" rows="2" placeholder="Ex: Com motorista bilíngue"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="prazoTransfer">
+                            <i class="fas fa-clock"></i> Prazo:
+                        </label>
+                        <input type="date" id="prazoTransfer" required>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="form-row">
+                    <button type="submit">
+                        <i class="fas fa-table"></i> Gerar Tabela
+                    </button>
+                    <button type="button" id="limparFormularioTransfer">
+                        <i class="fas fa-eraser"></i> Limpar Formulário
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Formulário Hotel -->
+        <section id="hotelFormSection" class="form-section hidden">
+            <h2>Dados do Hotel</h2>
+            <form id="hotelForm">
+                <!-- Hotel -->
+                <div class="form-group">
+                    <label for="nomeHotel">
+                        <i class="fas fa-hotel"></i> Nome do Hotel:
+                    </label>
+                    <input type="text" id="nomeHotel" placeholder="Ex: Hotel XYZ" required>
+                </div>
+
+                <!-- Categorias de Hospedagem -->
+                <div id="categoriasContainer">
+                    <!-- Categoria 1 -->
+                    <div class="categoria">
+                        <h3>Categoria de Hospedagem</h3>
+                        <div class="form-group">
+                            <label for="categoria1">
+                                <i class="fas fa-star"></i> Categoria:
+                            </label>
+                            <input type="text" id="categoria1" placeholder="Ex: Standard" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="periodo1">
+                                    <i class="fas fa-calendar-alt"></i> Período:
+                                </label>
+                                <input type="text" id="periodo1" placeholder="Ex: 01/01/2024 a 05/01/2024" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantidade1">
+                                    <i class="fas fa-users"></i> Quantidade:
+                                </label>
+                                <input type="number" id="quantidade1" placeholder="Ex: 2" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="valor1">
+                                    <i class="fas fa-dollar-sign"></i> Valor:
+                                </label>
+                                <input type="number" id="valor1" step="0.01" placeholder="Ex: 200.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subtotal1">
+                                    <i class="fas fa-calculator"></i> Subtotal:
+                                </label>
+                                <input type="number" id="subtotal1" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taxas1">
+                                    <i class="fas fa-percentage"></i> Taxas:
+                                </label>
+                                <input type="number" id="taxas1" step="0.01" placeholder="Ex: 10.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="valorTotalComTaxas1">
+                                    <i class="fas fa-calculator"></i> Valor Total com Taxas:
+                                </label>
+                                <input type="number" id="valorTotalComTaxas1" readonly>
+                            </div>
+                        </div>
+                        <button type="button" class="removerCategoria">
+                            <i class="fas fa-trash"></i> Remover Categoria
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botão para adicionar nova categoria -->
+                <div class="form-row">
+                    <button type="button" id="adicionarCategoria">
+                        <i class="fas fa-plus"></i> Adicionar Categoria
+                    </button>
+                </div>
+
+                <!-- Observações e Prazo -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="observacoesHotel">
+                            <i class="fas fa-comment"></i> Observações:
+                        </label>
+                        <textarea id="observacoesHotel" rows="2" placeholder="Ex: Café da manhã incluso"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="prazoHotel">
+                            <i class="fas fa-clock"></i> Prazo:
+                        </label>
+                        <input type="date" id="prazoHotel" required>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="form-row">
+                    <button type="submit">
+                        <i class="fas fa-table"></i> Gerar Tabela
+                    </button>
+                    <button type="button" id="limparFormularioHotel">
+                        <i class="fas fa-eraser"></i> Limpar Formulário
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Tabela gerada Aéreo -->
+        <section id="tabelaContainerAereo" class="hidden">
+            <h2>Tabela de Cotação - Aéreo</h2>
+            <table id="tabelaCotacaoAereo">
+                <thead>
+                    <tr>
+                        <th>Companhia Aérea</th>
+                        <th>Passageiros</th>
+                        <th>Valor por Passageiro</th>
+                        <th>Valor Total</th>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Número do Voo (Ida)</th>
+                        <th>Decolagem (Ida)</th>
+                        <th>Pouso (Ida)</th>
+                        <th>Tarifa (Ida)</th>
+                        <th>Número do Voo (Volta)</th>
+                        <th>Decolagem (Volta)</th>
+                        <th>Pouso (Volta)</th>
+                        <th>Tarifa (Volta)</th>
+                        <th>Observações</th>
+                        <th>Prazo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+            <button id="baixarTabelaAereo">
+                <i class="fas fa-download"></i> Baixar Tabela como PNG
+            </button>
+        </section>
+
+        <!-- Tabela gerada Transfer -->
+        <section id="tabelaContainerTransfer" class="hidden">
+            <h2>Tabela de Cotação - Transfer</h2>
+            <table id="tabelaCotacaoTransfer">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Tipo de Veículo</th>
+                        <th>Passageiros</th>
+                        <th>Valor</th>
+                        <th>Roteiro</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Observações</th>
+                        <th>Prazo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+            <button id="baixarTabelaTransfer">
+                <i class="fas fa-download"></i> Baixar Tabela como PNG
+            </button>
+        </section>
+
+        <!-- Tabela gerada Hotel -->
+        <section id="tabelaContainerHotel" class="hidden">
+            <h2>Tabela de Cotação - Hotel</h2>
+            <table id="tabelaCotacaoHotel">
+                <thead>
+                    <tr>
+                        <th>Hotel</th>
+                        <th>Categoria</th>
+                        <th>Período</th>
+                        <th>Quantidade</th>
+                        <th>Valor</th>
+                        <th>Subtotal</th>
+                        <th>Taxas</th>
+                        <th>Valor Total com Taxas</th>
+                        <th>Observações</th>
+                        <th>Prazo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+            <button id="baixarTabelaHotel">
+                <i class="fas fa-download"></i> Baixar Tabela como PNG
+            </button>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

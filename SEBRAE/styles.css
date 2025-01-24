@@ -1,0 +1,257 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #292d96;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h2 {
+    font-size: 1.5rem;
+    color: #292d96;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #292d96;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1a1d6e;
+}
+
+.hidden {
+    display: none;
+}
+
+#tabelaContainerAereo,
+#tabelaContainerTransfer,
+#tabelaContainerHotel {
+    margin-top: 30px;
+}
+
+#tabelaContainerAereo h2,
+#tabelaContainerTransfer h2,
+#tabelaContainerHotel h2 {
+    font-size: 1.5rem;
+    color: #292d96;
+    margin-bottom: 20px;
+}
+
+/* Estilos para a tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #292d96;
+    color: #fff;
+}
+
+/* Estilo para as colunas de ida */
+table td:nth-child(7),
+table td:nth-child(8),
+table td:nth-child(9),
+table td:nth-child(10) {
+    background-color: #e8f4f8; /* Cor de fundo para ida */
+    border-right: 2px solid #ccc; /* Borda para separar ida e volta */
+}
+
+/* Estilo para as colunas de volta */
+table td:nth-child(11),
+table td:nth-child(12),
+table td:nth-child(13),
+table td:nth-child(14) {
+    background-color: #f8e8f4; /* Cor de fundo para volta */
+}
+
+/* Estilo para o cabeçalho das colunas de ida */
+table th:nth-child(7),
+table th:nth-child(8),
+table th:nth-child(9),
+table th:nth-child(10) {
+    background-color: #1a1d6e; /* Cor de fundo mais escura para ida */
+}
+
+/* Estilo para o cabeçalho das colunas de volta */
+table th:nth-child(11),
+table th:nth-child(12),
+table th:nth-child(13),
+table th:nth-child(14) {
+    background-color: #6e1a1d; /* Cor de fundo mais escura para volta */
+}
+
+/* Botão de baixar tabela */
+#baixarTabelaAereo,
+#baixarTabelaTransfer,
+#baixarTabelaHotel {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#baixarTabelaAereo:hover,
+#baixarTabelaTransfer:hover,
+#baixarTabelaHotel:hover {
+    background-color: #218838;
+}
+
+/* Tooltip */
+.tooltip {
+    display: none;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.form-group:hover .tooltip {
+    display: block;
+}
+
+/* Ícones */
+i {
+    margin-right: 5px;
+}
+
+/* Melhorias para data e horário */
+.datetime-container {
+    display: flex;
+    gap: 10px;
+}
+
+.datetime-container input {
+    flex: 1;
+}
+
+/* Estilos para a seção de Hotel */
+.categoria {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.categoria h3 {
+    font-size: 1.2rem;
+    color: #292d96;
+    margin-bottom: 10px;
+}
+
+.removerCategoria {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.removerCategoria:hover {
+    background-color: #c82333;
+}
