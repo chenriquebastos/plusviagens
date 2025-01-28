@@ -10,92 +10,144 @@
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #292D96, #4F6EF0);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            color: #fff;
         }
+
         .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
             width: 100%;
+            text-align: center;
         }
+
         .form-container h1 {
             color: #292D96;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: bold;
             margin-bottom: 20px;
         }
+
         .form-group {
             margin-bottom: 20px;
+            text-align: left;
         }
+
         .form-group label {
             display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #292D96;
-            margin-bottom: 5px;
         }
+
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
         }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4F6EF0;
+            box-shadow: 0 0 5px rgba(79, 110, 240, 0.5);
+        }
+
         .form-group button {
-            background-color: #292D96;
-            color: #fff;
-            padding: 10px 20px;
+            background: linear-gradient(135deg, #292D96, #4F6EF0);
+            color: white;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
             width: 48%;
-            box-sizing: border-box;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+
         .form-group button:hover {
-            background-color: #1f2372;
+            background: linear-gradient(135deg, #4F6EF0, #6D83F2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 110, 240, 0.5);
         }
+
         .button-group {
             display: flex;
             justify-content: space-between;
         }
+
         .result-container {
-            margin-top: 20px;
-        }
-        .result-container p {
-            font-size: 16px;
+            background: #f8f9fa;
             color: #292D96;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: left;
         }
+
         .result-container .result-line {
             display: flex;
             justify-content: space-between;
+            font-size: 16px;
             margin-bottom: 10px;
+            font-weight: 500;
         }
+
         .copy-button {
             margin-top: 10px;
-            background-color: #292D96;
-            color: #fff;
-            padding: 10px;
+            background: linear-gradient(135deg, #292D96, #4F6EF0);
+            color: white;
+            padding: 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            width: 100%;
             text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
         }
+
         .copy-button:hover {
-            background-color: #1f2372;
+            background: linear-gradient(135deg, #4F6EF0, #6D83F2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 110, 240, 0.5);
         }
+
         .copy-feedback {
-            color: red;
+            color: green;
             font-size: 16px;
             margin-top: 10px;
             text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-group button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -112,11 +164,11 @@
         </div>
         <div class="form-group">
             <label for="valorTarifa">Valor da Tarifa (R$):</label>
-            <input type="text" id="valorTarifa" required oninput="formatarValor(this)">
+            <input type="text" id="valorTarifa" required oninput="CalculadoraDesconto.formatarValor(this)">
         </div>
         <div class="form-group button-group">
-            <button type="button" onclick="calcularDesconto()">Calcular Desconto</button>
-            <button type="button" class="reset-button" onclick="refazerCalculo()">Refazer</button>
+            <button type="button" onclick="CalculadoraDesconto.calcularDesconto()">Calcular Desconto</button>
+            <button type="button" class="reset-button" onclick="CalculadoraDesconto.refazerCalculo()">Refazer</button>
         </div>
         <div class="result-container" id="resultContainer" style="display: none;">
             <div class="result-line">
@@ -131,86 +183,148 @@
                 <span>Valor com desconto:</span>
                 <span id="valorComDesconto"></span>
             </div>
-            <button class="copy-button" onclick="copiarResultado()">Copiar Resultado</button>
-            <div class="copy-feedback" id="copyFeedback" style="display: none;"></div>
+            <button class="copy-button" onclick="CalculadoraDesconto.copiarResultado()" aria-label="Copiar resultado">Copiar Resultado</button>
+            <div class="copy-feedback" id="copyFeedback" aria-live="polite" style="display: none;"></div>
         </div>
     </div>
-
     <script>
-        function formatarValor(input) {
-            let valor = input.value.replace(/\D/g, '');
-            valor = (valor / 100).toFixed(2) + '';
-            valor = valor.replace(".", ",");
-            valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-            input.value = valor;
-        }
+        const CalculadoraDesconto = {
+            /**
+             * Formata o valor inserido no campo de tarifa para o formato monetário brasileiro.
+             * @param {HTMLInputElement} input - O campo de entrada onde o valor é digitado.
+             */
+            formatarValor: function(input) {
+                let valor = input.value.replace(/\D/g, '');
+                valor = (valor / 100).toFixed(2) + '';
+                valor = valor.replace(".", ",");
+                valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                input.value = valor;
+            },
 
-        function calcularDesconto() {
-            const servico = document.getElementById('servico').value;
-            let valorTarifa = document.getElementById('valorTarifa').value.replace(/\./g, '').replace(',', '.');
+            /**
+             * Valida se o valor da tarifa é um número válido e maior que zero.
+             * @param {number} valor - O valor da tarifa.
+             * @returns {boolean} - Retorna true se o valor for válido, caso contrário, false.
+             */
+            validarValor: function(valor) {
+                return !isNaN(valor) && valor > 0;
+            },
 
-            valorTarifa = parseFloat(valorTarifa);
+            /**
+             * Exibe uma mensagem de erro temporária na tela.
+             * @param {string} mensagem - A mensagem de erro a ser exibida.
+             */
+            mostrarErro: function(mensagem) {
+                const feedback = document.createElement('div');
+                feedback.className = 'error-feedback';
+                feedback.innerText = mensagem;
+                document.body.appendChild(feedback);
+                setTimeout(() => feedback.remove(), 3000);
+            },
 
-            let desconto = 0;
+            /**
+             * Calcula o desconto com base no tipo de serviço e no valor da tarifa.
+             */
+            calcularDesconto: function() {
+                const servico = document.getElementById('servico').value;
+                let valorTarifa = document.getElementById('valorTarifa').value.replace(/\./g, '').replace(',', '.');
 
-            if (servico === 'aereo') {
-                desconto = 0.05; // 5% de desconto
-            } else if (servico === 'hospedagem') {
-                desconto = 0.0815; // 8.15% de desconto
-            }
+                valorTarifa = parseFloat(valorTarifa);
 
-            if (!isNaN(valorTarifa) && desconto > 0) {
-                const valorDesconto = valorTarifa * desconto;
-                const valorComDesconto = valorTarifa - valorDesconto;
+                if (!this.validarValor(valorTarifa)) {
+                    this.mostrarErro('Por favor, insira um valor válido para a tarifa.');
+                    return;
+                }
 
-                document.getElementById('valorSemDesconto').innerText = `R$ ${valorTarifa.toFixed(2).replace('.', ',')}`;
-                document.getElementById('porcentagemDesconto').innerText = `${(desconto * 100).toFixed(2)}%`;
-                document.getElementById('valorDesconto').innerText = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
-                document.getElementById('valorComDesconto').innerText = `R$ ${valorComDesconto.toFixed(2).replace('.', ',')}`;
-                document.getElementById('resultContainer').style.display = 'block';
-            } else {
+                if (!servico) {
+                    this.mostrarErro('Por favor, selecione um tipo de serviço.');
+                    return;
+                }
+
+                let desconto = 0;
+
+                if (servico === 'aereo') {
+                    desconto = 0.05; // 5% de desconto
+                } else if (servico === 'hospedagem') {
+                    desconto = 0.0815; // 8.15% de desconto
+                }
+
+                if (desconto > 0) {
+                    const valorDesconto = valorTarifa * desconto;
+                    const valorComDesconto = valorTarifa - valorDesconto;
+
+                    document.getElementById('valorSemDesconto').innerText = `R$ ${valorTarifa.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('porcentagemDesconto').innerText = `${(desconto * 100).toFixed(2)}%`;
+                    document.getElementById('valorDesconto').innerText = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('valorComDesconto').innerText = `R$ ${valorComDesconto.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('resultContainer').style.display = 'block';
+                } else {
+                    document.getElementById('resultContainer').style.display = 'none';
+                }
+            },
+
+            /**
+             * Copia o resultado do cálculo para a área de transferência.
+             */
+            copiarResultado: function() {
+                const valorSemDesconto = document.getElementById('valorSemDesconto').innerText;
+                const porcentagemDesconto = document.getElementById('porcentagemDesconto').innerText;
+                const valorDesconto = document.getElementById('valorDesconto').innerText;
+                const valorComDesconto = document.getElementById('valorComDesconto').innerText;
+
+                const resultadoHTML = `<div class="gmail_default" style="font-family: 'trebuchet ms', sans-serif; color: rgb(11, 83, 148); font-size: small;"><span style="background-color: rgb(255, 255, 255);"><b style="font-family: 'Trebuchet MS';">Detalhamento de valores com aplicação do desconto:</b><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor sem aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorSemDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Desconto (${porcentagemDesconto}):</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor com aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorComDesconto}</span></span><br clear="all"></div>`;
+
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = resultadoHTML;
+                document.body.appendChild(tempElement);
+
+                const range = document.createRange();
+                range.selectNodeContents(tempElement);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                try {
+                    document.execCommand('copy');
+                    const feedback = document.getElementById('copyFeedback');
+                    feedback.innerText = 'Resultado copiado com sucesso!';
+                    feedback.style.display = 'block';
+                } catch (err) {
+                    const feedback = document.getElementById('copyFeedback');
+                    feedback.innerText = 'Falha ao copiar o resultado.';
+                    feedback.style.display = 'block';
+                }
+
+                document.body.removeChild(tempElement);
+            },
+
+            /**
+             * Limpa os campos e esconde o resultado.
+             */
+            refazerCalculo: function() {
+                document.getElementById('servico').value = '';
+                document.getElementById('valorTarifa').value = '';
                 document.getElementById('resultContainer').style.display = 'none';
+                document.getElementById('copyFeedback').style.display = 'none';
             }
-        }
+        };
 
-        function copiarResultado() {
-            const valorSemDesconto = document.getElementById('valorSemDesconto').innerText;
-            const porcentagemDesconto = document.getElementById('porcentagemDesconto').innerText;
-            const valorDesconto = document.getElementById('valorDesconto').innerText;
-            const valorComDesconto = document.getElementById('valorComDesconto').innerText;
+        // Event listeners
+        document.getElementById('valorTarifa').addEventListener('input', function() {
+            CalculadoraDesconto.formatarValor(this);
+        });
 
-            const resultadoHTML = `<div class="gmail_default" style="font-family: 'trebuchet ms', sans-serif; color: rgb(11, 83, 148); font-size: small;"><span style="background-color: rgb(255, 255, 255);"><b style="font-family: 'Trebuchet MS';">Detalhamento de valores com aplicação do desconto:</b><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor sem aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorSemDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Desconto (${porcentagemDesconto}):</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor com aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorComDesconto}</span></span><br clear="all"></div>`;
+        document.querySelector('.form-group button[onclick="CalculadoraDesconto.calcularDesconto()"]').addEventListener('click', function() {
+            CalculadoraDesconto.calcularDesconto();
+        });
 
-            const tempElement = document.createElement('div');
-            tempElement.innerHTML = resultadoHTML;
-            document.body.appendChild(tempElement);
+        document.querySelector('.reset-button').addEventListener('click', function() {
+            CalculadoraDesconto.refazerCalculo();
+        });
 
-            const range = document.createRange();
-            range.selectNodeContents(tempElement);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-
-            try {
-                document.execCommand('copy');
-                const feedback = document.getElementById('copyFeedback');
-                feedback.innerText = 'Resultado copiado com sucesso!';
-                feedback.style.display = 'block';
-            } catch (err) {
-                const feedback = document.getElementById('copyFeedback');
-                feedback.innerText = 'Falha ao copiar o resultado.';
-                feedback.style.display = 'block';
-            }
-
-            document.body.removeChild(tempElement);
-        }
-
-        function refazerCalculo() {
-            document.getElementById('servico').value = '';
-            document.getElementById('valorTarifa').value = '';
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('copyFeedback').style.display = 'none';
-        }
+        document.querySelector('.copy-button').addEventListener('click', function() {
+            CalculadoraDesconto.copiarResultado();
+        });
     </script>
 </body>
 </html>
