@@ -3,9 +3,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
+  }
+  
+  body {
     font-family: 'Open Sans', sans-serif;
     background-color: #f4f4f9;
     color: #333;
@@ -15,80 +15,80 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-}
-
-.container {
+  }
+  
+  .container {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 1200px;
     padding: 20px;
-}
-
-header {
+  }
+  
+  header {
     text-align: center;
     margin-bottom: 20px;
-}
-
-header h1 {
+  }
+  
+  header h1 {
     font-size: 2rem;
     color: #292d96;
     margin-bottom: 10px;
-}
-
-header p {
+  }
+  
+  header p {
     font-size: 1rem;
     color: #666;
-}
-
-.form-section {
+  }
+  
+  .form-section {
     margin-bottom: 30px;
-}
-
-.form-section h2 {
+  }
+  
+  .form-section h2 {
     font-size: 1.5rem;
     color: #292d96;
     margin-bottom: 20px;
-}
-
-.form-group {
+  }
+  
+  .form-group {
     margin-bottom: 15px;
-}
-
-.form-group label {
+  }
+  
+  .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
     color: #444;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-}
-
-.form-group textarea {
+  }
+  
+  .form-group textarea {
     resize: vertical;
     min-height: 80px;
-}
-
-.form-row {
+  }
+  
+  .form-row {
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
-}
-
-.form-row .form-group {
+  }
+  
+  .form-row .form-group {
     flex: 1;
-}
-
-button {
+  }
+  
+  button {
     width: 100%;
     padding: 10px;
     background-color: #292d96;
@@ -99,87 +99,105 @@ button {
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s ease;
-}
-
-button:hover {
+  }
+  
+  button:hover {
     background-color: #1a1d6e;
-}
-
-.hidden {
+  }
+  
+  .hidden {
     display: none;
-}
-
-#tabelaContainerAereo,
-#tabelaContainerTransfer,
-#tabelaContainerHotel {
+  }
+  
+  /* Área de preview */
+  .preview {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #fafafa;
+  }
+  
+  /* Tabelas */
+  #tabelaContainerAereo,
+  #tabelaContainerTransfer,
+  #tabelaContainerHotel {
     margin-top: 30px;
-}
-
-#tabelaContainerAereo h2,
-#tabelaContainerTransfer h2,
-#tabelaContainerHotel h2 {
+  }
+  
+  #tabelaContainerAereo h2,
+  #tabelaContainerTransfer h2,
+  #tabelaContainerHotel h2 {
     font-size: 1.5rem;
     color: #292d96;
     margin-bottom: 20px;
-}
-
-/* Estilos para a tabela */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-table th,
-table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-table th {
+  }
+  
+  /* Tabela de Aéreo */
+  
+  /* Cabeçalho */
+  #tabelaCotacaoAereo thead th {
     background-color: #292d96;
     color: #fff;
-}
-
-/* Estilo para as colunas de ida */
-table td:nth-child(7),
-table td:nth-child(8),
-table td:nth-child(9),
-table td:nth-child(10) {
-    background-color: #e8f4f8; /* Cor de fundo para ida */
-    border-right: 2px solid #ccc; /* Borda para separar ida e volta */
-}
-
-/* Estilo para as colunas de volta */
-table td:nth-child(11),
-table td:nth-child(12),
-table td:nth-child(13),
-table td:nth-child(14) {
-    background-color: #f8e8f4; /* Cor de fundo para volta */
-}
-
-/* Estilo para o cabeçalho das colunas de ida */
-table th:nth-child(7),
-table th:nth-child(8),
-table th:nth-child(9),
-table th:nth-child(10) {
-    background-color: #1a1d6e; /* Cor de fundo mais escura para ida */
-}
-
-/* Estilo para o cabeçalho das colunas de volta */
-table th:nth-child(11),
-table th:nth-child(12),
-table th:nth-child(13),
-table th:nth-child(14) {
-    background-color: #6e1a1d; /* Cor de fundo mais escura para volta */
-}
-
-/* Botão de baixar tabela */
-#baixarTabelaAereo,
-#baixarTabelaTransfer,
-#baixarTabelaHotel {
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+    padding: 10px;
+  }
+  
+  /* Corpo da tabela */
+  #tabelaCotacaoAereo tbody td {
+    background-color: #FFFFFF;
+    color: #000;
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+    padding: 10px;
+  }
+  
+  /* Colunas específicas para os dados de ida e volta na tabela de Aéreo */
+  /* As colunas 8 a 11 para a linha de "Ida" */
+  #tabelaCotacaoAereo tbody tr:nth-child(1) td:nth-child(8),
+  #tabelaCotacaoAereo tbody tr:nth-child(1) td:nth-child(9),
+  #tabelaCotacaoAereo tbody tr:nth-child(1) td:nth-child(10),
+  #tabelaCotacaoAereo tbody tr:nth-child(1) td:nth-child(11) {
+    background-color: #e8f4f8;
+    border-right: 2px solid #ccc;
+  }
+  
+  /* As colunas 8 a 11 para a linha de "Volta" */
+  #tabelaCotacaoAereo tbody tr:nth-child(2) td:nth-child(8),
+  #tabelaCotacaoAereo tbody tr:nth-child(2) td:nth-child(9),
+  #tabelaCotacaoAereo tbody tr:nth-child(2) td:nth-child(10),
+  #tabelaCotacaoAereo tbody tr:nth-child(2) td:nth-child(11) {
+    background-color: #f8e8f4;
+  }
+  
+  /* Para as colunas do cabeçalho de "Ida" */
+  #tabelaCotacaoAereo thead th:nth-child(8),
+  #tabelaCotacaoAereo thead th:nth-child(9),
+  #tabelaCotacaoAereo thead th:nth-child(10),
+  #tabelaCotacaoAereo thead th:nth-child(11) {
+    background-color: #1a1d6e;
+  }
+  
+  /* Para as colunas do cabeçalho de "Volta" */
+  #tabelaCotacaoAereo thead th:nth-child(12),
+  #tabelaCotacaoAereo thead th:nth-child(13),
+  #tabelaCotacaoAereo thead th:nth-child(14),
+  #tabelaCotacaoAereo thead th:nth-child(15) {
+    background-color: #6e1a1d;
+  }
+  
+  /* Tabelas Transfer e Hotel permanecem com fundo branco */
+  #tabelaCotacaoTransfer,
+  #tabelaCotacaoHotel {
+    background-color: #FFFFFF;
+  }
+  
+  /* Botões */
+  #baixarTabelaAereo,
+  #baixarTabelaTransfer,
+  #baixarTabelaHotel {
     background-color: #28a745;
     color: #fff;
     border: none;
@@ -189,16 +207,15 @@ table th:nth-child(14) {
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s ease;
-}
-
-#baixarTabelaAereo:hover,
-#baixarTabelaTransfer:hover,
-#baixarTabelaHotel:hover {
+  }
+  
+  #baixarTabelaAereo:hover,
+  #baixarTabelaTransfer:hover,
+  #baixarTabelaHotel:hover {
     background-color: #218838;
-}
-
-/* Tooltip */
-.tooltip {
+  }
+  
+  .tooltip {
     display: none;
     background-color: #333;
     color: #fff;
@@ -206,43 +223,40 @@ table th:nth-child(14) {
     border-radius: 5px;
     font-size: 0.9rem;
     margin-top: 5px;
-}
-
-.form-group:hover .tooltip {
+  }
+  
+  .form-group:hover .tooltip {
     display: block;
-}
-
-/* Ícones */
-i {
+  }
+  
+  i {
     margin-right: 5px;
-}
-
-/* Melhorias para data e horário */
-.datetime-container {
+  }
+  
+  .datetime-container {
     display: flex;
     gap: 10px;
-}
-
-.datetime-container input {
+  }
+  
+  .datetime-container input {
     flex: 1;
-}
-
-/* Estilos para a seção de Hotel */
-.categoria {
+  }
+  
+  .categoria {
     border: 1px solid #ddd;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 5px;
     background-color: #f9f9f9;
-}
-
-.categoria h3 {
+  }
+  
+  .categoria h3 {
     font-size: 1.2rem;
     color: #292d96;
     margin-bottom: 10px;
-}
-
-.removerCategoria {
+  }
+  
+  .removerCategoria {
     background-color: #dc3545;
     color: white;
     border: none;
@@ -250,8 +264,23 @@ i {
     padding: 5px 10px;
     cursor: pointer;
     margin-top: 10px;
-}
-
-.removerCategoria:hover {
+  }
+  
+  .removerCategoria:hover {
     background-color: #c82333;
-}
+  }
+  
+  .transferItem {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .transferItem h3 {
+    font-size: 1.2rem;
+    color: #292d96;
+    margin-bottom: 10px;
+  }
+  
