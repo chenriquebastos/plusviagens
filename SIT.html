@@ -435,10 +435,13 @@
           element = document.createElement("input");
           element.type = "checkbox";
           element.checked = false;
-        } else if (campo.includes("data")) {
+        } 
+        // Para os demais campos que contenham "data"
+        else if (campo === "data_inicio_outros_svcs" || campo === "data_fim_outros_svcs" || campo === "data_lancamento") {
           element = document.createElement("input");
           element.type = "date";
-        } else if (campo === "solicitante") {
+        } 
+        else if (campo === "solicitante") {
           element = document.createElement("textarea");
           element.rows = 3;
         } else {
@@ -515,7 +518,7 @@
       notyf.success('Linha clonada!');
     }
     
-    // Retorna a data/hora formatada
+    // Retorna a data/hora formatada para nome dos arquivos
     function getFormattedDateTime() {
       return dayjs().format('YYYYMMDD_HHmmss');
     }
@@ -592,15 +595,22 @@
           destino: inputs[5].value || "",
           ida_e_volta: inputs[6].checked,
           solicitante: limparTexto(inputs[7].value),
-          data_lancamento: inputs[8].value,
+          data_lancamento: inputs[8].value, // data_lancamento vem em formato YYYY-MM-DD
           emissor: inputs[9].value,
           numero_requisicao: inputs[10].value,
           passageiro: limparTexto(inputs[11].value),
-          data_inicio_outros_svcs: inputs[12].value,
-          data_fim_outros_svcs: inputs[13].value,
+          data_inicio_outros_svcs: inputs[12].value, // formato YYYY-MM-DD
+          data_fim_outros_svcs: inputs[13].value,    // formato YYYY-MM-DD
           valor_tarifa: inputs[14].value,
           markup: inputs[15].value
         };
+        // Reformatando as datas de início e fim de serviços para DD/MM/YYYY
+        if(dados.data_inicio_outros_svcs) {
+          dados.data_inicio_outros_svcs = dayjs(dados.data_inicio_outros_svcs).format('DD/MM/YYYY');
+        }
+        if(dados.data_fim_outros_svcs) {
+          dados.data_fim_outros_svcs = dayjs(dados.data_fim_outros_svcs).format('DD/MM/YYYY');
+        }
         let origemVal = limparTexto(dados.origem);
         let destinoVal = limparTexto(dados.destino);
         let descricao_outros_svcs = "";
