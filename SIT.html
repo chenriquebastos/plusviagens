@@ -350,7 +350,7 @@
     </style>
   </head>
   <body>
-    <!-- Como os scripts externos possuem defer, garantimos que nosso código será executado após o carregamento completo -->
+    <!-- Os scripts com defer garantem execução após o carregamento -->
     <div id="topHeader">
       <div id="dateTimeDisplay"></div>
       <div class="fw-bold">PLUS VIAGENS E TURISMO LTDA</div>
@@ -415,7 +415,7 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Linhas serão adicionadas dinamicamente -->
+            <!-- As linhas serão adicionadas dinamicamente -->
           </tbody>
         </table>
       </div>
@@ -448,13 +448,13 @@
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
 
-    <!-- Nosso código inline: aguardamos o DOMContentLoaded -->
+    <!-- Nosso código inline -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Cria a instância global (window.notyf) para o Notyf
+        // Instância do Notyf
         window.notyf = new Notyf();
 
-        // Função para atualizar o relógio usando dayjs
+        // Atualiza o relógio
         window.updateClock = function () {
           const now = dayjs();
           document.getElementById("dateTimeDisplay").textContent =
@@ -463,19 +463,20 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Alterna o modo claro/escuro
+        // Alterna modo claro/escuro
         window.toggleDarkMode = function () {
           document.body.classList.toggle("dark-mode");
         };
 
-        // Atualiza o contador de linhas
+        // Atualiza contador de linhas
         window.updateProgress = function () {
-          const rowCount = document.querySelectorAll("#vendasTable tbody tr")
-            .length;
+          const rowCount = document.querySelectorAll("#vendasTable tbody tr").length;
           document.getElementById("progressIndicator").textContent = `Linhas: ${rowCount}`;
         };
 
-        // Função atualizada para obter o valor da célula, tratando o campo emissor
+        // ********************
+        // DEFINIÇÃO DA FUNÇÃO getCellValue
+        // ********************
         window.getCellValue = function (cell) {
           const selectElem = cell.querySelector("select");
           if (selectElem) {
@@ -492,18 +493,15 @@
           return cell.textContent.trim();
         };
 
-        // Validação das linhas (campos obrigatórios)
+        /* Validação: apenas o campo Valor Tarifa é obrigatório.
+           Fornecedor e Data de volta não são obrigatórios. */
         window.validateRows = function () {
           let valid = true;
           const rows = document.querySelectorAll("#vendasTable tbody tr");
           rows.forEach((row) => {
             const inputs = row.querySelectorAll("input, textarea");
-            inputs[0].classList.remove("input-error");
+            // Campo Valor Tarifa (índice 14)
             inputs[14].classList.remove("input-error");
-            if (!inputs[0].value.trim()) {
-              inputs[0].classList.add("input-error");
-              valid = false;
-            }
             if (!inputs[14].value.trim()) {
               inputs[14].classList.add("input-error");
               valid = false;
@@ -552,7 +550,7 @@
               element = document.createElement("textarea");
               element.rows = 3;
             } else if (campo === "emissor") {
-              // Cria um container para o select e o input customizado
+              // Cria container para select e input customizado
               const container = document.createElement("div");
               container.style.display = "flex";
               container.style.flexDirection = "column";
@@ -560,7 +558,6 @@
               const selectElem = document.createElement("select");
               selectElem.name = campo;
               selectElem.setAttribute("aria-label", "Emissor");
-              // Gera um id para associação com o label
               const idEmissor = campo + "_" + Date.now();
               selectElem.id = idEmissor;
 
@@ -587,7 +584,7 @@
               customInput.placeholder = "Escreva o emissor";
               customInput.style.display = "none";
 
-              // Exibe o input customizado se "Outros" for selecionado
+              // Exibe input se "Outros" for selecionado
               selectElem.addEventListener("change", function () {
                 if (selectElem.value === "Outros") {
                   customInput.style.display = "block";
@@ -607,10 +604,9 @@
                 element.pattern = "[0-9.]*";
                 element.inputMode = "decimal";
               }
-              // Define limite de 60 caracteres para o campo passageiro e aviso
               if (campo === "passageiro") {
                 element.maxLength = 60;
-                element.addEventListener("input", function (e) {
+                element.addEventListener("input", function () {
                   if (
                     element.value.length === 60 &&
                     !element.dataset.warningShown
@@ -631,14 +627,12 @@
               element.setAttribute("aria-label", "MU");
             } else if (campo === "emissor") {
               label.textContent = "Emissor";
-              // Para o campo emissor, o label ficará associado ao select
               label.htmlFor = campo + "_" + Date.now();
             } else {
               label.textContent = campo.replace(/_/g, " ");
               element.placeholder = campo.replace(/_/g, " ");
               element.setAttribute("aria-label", campo.replace(/_/g, " "));
             }
-            // Para campos que não sejam "emissor", definimos o id diretamente
             if (campo !== "emissor") {
               label.htmlFor = campo + "_" + Date.now();
               element.id = label.htmlFor;
@@ -649,7 +643,7 @@
             newRow.appendChild(td);
           });
 
-          // Célula de ações (botões de clonar e remover)
+          // Célula de ações (clonar e remover)
           const tdAcoes = document.createElement("td");
           const btnClone = document.createElement("button");
           btnClone.innerHTML = '<i class="fas fa-clone"></i>';
@@ -752,10 +746,12 @@
           doc.save(pdfFileName);
         };
 
-        // Gera o XML e o PDF e inicia os downloads
+        // Gera o XML e o PDF aplicando as condições:
+        // - Se o cliente for TFD LEM e o Fornecedor estiver em branco, usa "F03063"
+        // - Se for somente ida (checkbox não marcado) e Data de volta estiver em branco,
+        //   preenche Data de volta com a Data de ida.
         window.gerarXML = function () {
-          const clienteSelecionado = document.getElementById("clienteSelecionado")
-            .value;
+          const clienteSelecionado = document.getElementById("clienteSelecionado").value;
           const rows = document.querySelectorAll("#vendasTable tbody tr");
           if (rows.length === 0) {
             Swal.fire(
@@ -768,7 +764,7 @@
           if (!validateRows()) {
             Swal.fire(
               "Atenção",
-              "Preencha os campos obrigatórios (Fornecedor de Emissão e Valor Tarifa).",
+              "Preencha o campo obrigatório: Valor Tarifa.",
               "warning"
             );
             return;
@@ -777,8 +773,14 @@
           rows.forEach((row) => {
             const cells = row.querySelectorAll("td");
             const inputs = row.querySelectorAll("input, textarea");
+            // Se o cliente for TFD LEM e o campo Fornecedor estiver em branco, usa "F03063"
+            const fornecedorValue = inputs[0].value.trim();
+            const codigoFornecedor =
+              clienteSelecionado === "01804" && !fornecedorValue
+                ? "F03063"
+                : fornecedorValue;
             const dados = {
-              codigo_fornecedor: inputs[0].value || "F03063",
+              codigo_fornecedor: codigoFornecedor,
               cia_iata: inputs[1].value || "RAPIDO FEDERAL",
               ccustos_cliente: inputs[2].value || "NAO INFORMADO",
               localizador: inputs[3].value || "",
@@ -795,31 +797,30 @@
               valor_tarifa: inputs[14].value,
               markup: inputs[15].value,
             };
+
+            // Se for somente ida e Data de volta estiver em branco,
+            // preenche com a mesma data da ida.
+            if (!dados.ida_e_volta && !dados.data_fim_outros_svcs.trim()) {
+              dados.data_fim_outros_svcs = dados.data_inicio_outros_svcs;
+            }
+
             if (dados.data_inicio_outros_svcs) {
-              dados.data_inicio_outros_svcs = dayjs(
-                dados.data_inicio_outros_svcs
-              ).format("DD/MM/YYYY");
+              dados.data_inicio_outros_svcs = dayjs(dados.data_inicio_outros_svcs).format("DD/MM/YYYY");
             }
             if (dados.data_fim_outros_svcs) {
-              dados.data_fim_outros_svcs = dayjs(
-                dados.data_fim_outros_svcs
-              ).format("DD/MM/YYYY");
+              dados.data_fim_outros_svcs = dayjs(dados.data_fim_outros_svcs).format("DD/MM/YYYY");
             }
             let origemVal = limparTexto(dados.origem);
             let destinoVal = limparTexto(dados.destino);
             let descricao_outros_svcs = "";
             if (origemVal || destinoVal) {
               descricao_outros_svcs = dados.ida_e_volta
-                ? `${origemVal} - ${destinoVal} - ${origemVal}`
-                : `${origemVal} - ${destinoVal}`;
+                ? `${origemVal} / ${destinoVal} / ${origemVal}`
+                : `${origemVal} / ${destinoVal}`;
             }
             const bilhete = `
           <bilhete>
-            <idv_externo>${Math.floor(
-              Math.random() * 100000000
-            )
-              .toString()
-              .padStart(8, "0")}</idv_externo>
+            <idv_externo>${Math.floor(Math.random() * 100000000).toString().padStart(8, "0")}</idv_externo>
             <data_lancamento>${dados.data_lancamento}</data_lancamento>
             <codigo_produto>RDV</codigo_produto>
             <codigo_fornecedor>${dados.codigo_fornecedor}</codigo_fornecedor>
@@ -937,10 +938,10 @@
           });
         };
 
-        // Inicializa o AOS (se ainda não estiver inicializado)
+        // Inicializa o AOS
         AOS.init();
 
-        // Listener para restringir os inputs de Valor Tarifa e MU (opcional)
+        // Listener para restringir inputs de Valor Tarifa e MU
         document.addEventListener("input", function (e) {
           if (
             e.target &&
@@ -954,7 +955,7 @@
           }
         });
 
-        // Listener para recalcular automaticamente o MU a partir da Tarifa
+        // Listener para recalcular MU a partir da Tarifa
         document.addEventListener("input", function (e) {
           if (e.target && e.target.name === "valor_tarifa") {
             let row = e.target.closest("tr");
@@ -972,7 +973,7 @@
           }
         });
 
-        // Listener para permitir colar datas no formato DD/MM/YYYY em campos de data
+        // Listener para permitir colar datas no formato DD/MM/YYYY
         document.addEventListener("paste", function (e) {
           const target = e.target;
           if (target && target.type === "date") {
