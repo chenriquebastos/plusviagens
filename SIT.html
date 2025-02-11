@@ -436,7 +436,7 @@
           element.type = "checkbox";
           element.checked = false;
         } 
-        // Para os demais campos que contenham "data"
+        // Para os campos que representam datas, usamos type="date"
         else if (campo === "data_inicio_outros_svcs" || campo === "data_fim_outros_svcs" || campo === "data_lancamento") {
           element = document.createElement("input");
           element.type = "date";
@@ -595,7 +595,7 @@
           destino: inputs[5].value || "",
           ida_e_volta: inputs[6].checked,
           solicitante: limparTexto(inputs[7].value),
-          data_lancamento: inputs[8].value, // data_lancamento vem em formato YYYY-MM-DD
+          data_lancamento: inputs[8].value, // em formato YYYY-MM-DD
           emissor: inputs[9].value,
           numero_requisicao: inputs[10].value,
           passageiro: limparTexto(inputs[11].value),
@@ -751,6 +751,28 @@
         const partes = e.target.value.split('.');
         if(partes.length > 2) {
           e.target.value = partes.shift() + '.' + partes.join('');
+        }
+      }
+    });
+  </script>
+  
+  <!-- Listener para permitir colar datas no formato DD/MM/YYYY em campos de data -->
+  <script>
+    document.addEventListener("paste", function(e) {
+      const target = e.target;
+      if (target && target.type === "date") {
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+        // Verifica se o dado copiado está no formato DD/MM/YYYY
+        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = pasteData.match(regex);
+        if(match) {
+          e.preventDefault();
+          const dd = match[1],
+                mm = match[2],
+                yyyy = match[3];
+          // Converte para o formato ISO (YYYY-MM-DD) para o input type="date"
+          const isoDate = `${yyyy}-${mm}-${dd}`;
+          target.value = isoDate;
         }
       }
     });
