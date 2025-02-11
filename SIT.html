@@ -1,636 +1,825 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema Corporativo de Vendas</title>
-  
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- AOS CSS (Animate On Scroll) -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-  <!-- Notyf CSS (para notificações toast) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-  <!-- SweetAlert2 CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  <!-- Google Fonts: Roboto e Merriweather -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Merriweather:700&display=swap" rel="stylesheet">
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-  
-  <!-- jsPDF e autoTable para geração de PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
-  <!-- Day.js para datas -->
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js" defer></script>
-  <!-- SweetAlert2 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-  <!-- Notyf JS -->
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js" defer></script>
-  
-  <style>
-    /* RESET */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    /* Labels ocultas para acessibilidade */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-    /* Variáveis de cores corporativas */
-    :root {
-      --primary-color: #1E2A38;
-      --secondary-color: #00AEEF;
-      --bg-color: #F5F5F5;
-      --text-color: #333;
-      --white: #fff;
-      --border-color: #e0e0e0;
-      --danger-color: #e63946;
-      --warning-color: #f1c40f;
-    }
-    .dark-mode {
-      --primary-color: #90caf9;
-      --secondary-color: #42a5f5;
-      --bg-color: #121212;
-      --text-color: #e0e0e0;
-      --white: #1e1e1e;
-      --border-color: #333;
-      --danger-color: #f44336;
-      --warning-color: #ffa726;
-    }
-    /* Estilos base */
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding-top: 60px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    /* Cabeçalho fixo com data/hora */
-    #topHeader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--primary-color);
-      color: var(--white);
-      padding: 8px 20px;
-      z-index: 1100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #dateTimeDisplay {
-      font-size: 1rem;
-    }
-    /* Container principal */
-    main.container {
-      max-width: 1850px;
-      margin: 80px auto 20px auto;
-      background: var(--white);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: grid;
-      gap: 20px;
-    }
-    h1 {
-      font-family: 'Merriweather', serif;
-      text-align: center;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-    /* Cabeçalho do formulário */
-    .form-header {
-      display: grid;
-      grid-template-columns: 1fr auto auto auto;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    }
-    .form-header .btn-group {
-      display: flex;
-      gap: 10px;
-    }
-    .form-header button {
-      background-color: var(--secondary-color);
-      color: var(--white);
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .form-header button:hover,
-    .form-header button:focus {
-      background-color: #004f7a;
-      transform: scale(1.02);
-    }
-    .form-header select {
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-    .progress-indicator {
-      font-size: 0.9rem;
-      color: var(--white);
-      justify-self: end;
-    }
-    /* Tabela */
-    .table-container {
-      overflow-x: auto;
-    }
-    .table-container::-webkit-scrollbar {
-      height: 10px;
-    }
-    .table-container::-webkit-scrollbar-track {
-      background: var(--bg-color);
-    }
-    .table-container::-webkit-scrollbar-thumb {
-      background: var(--secondary-color);
-      border-radius: 4px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 2500px;
-      position: relative;
-    }
-    table th, table td {
-      min-width: 150px;
-      padding: 12px;
-      text-align: left;
-      border: 1px solid var(--border-color);
-    }
-    thead th {
-      position: sticky;
-      top: 0;
-      background-color: var(--primary-color) !important;
-      color: var(--white) !important;
-      font-weight: 500;
-      z-index: 2;
-    }
-    tbody tr {
-      border-bottom: 1px solid var(--border-color);
-      transition: background-color 0.2s, opacity 0.5s;
-      opacity: 0;
-      animation: fadeIn 0.5s forwards;
-    }
-    tbody tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    tbody tr:hover {
-      background-color: #e6f3ff;
-    }
-    table th:nth-child(12), table td:nth-child(12) {
-      min-width: 200px;
-    }
-    /* Inputs e textareas */
-    td input[type="text"],
-    td input[type="date"],
-    td textarea {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 0.95rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    td input[type="text"]:focus,
-    td input[type="date"]:focus,
-    td textarea:focus {
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 5px var(--secondary-color);
-      outline: none;
-    }
-    td textarea {
-      min-height: 50px;
-      resize: vertical;
-    }
-    td input[name="valor_tarifa"],
-    td input[name="markup"] {
-      pattern: "[0-9.]*";
-      inputmode: "decimal";
-    }
-    .input-error {
-      border: 2px solid var(--danger-color);
-    }
-    /* Botões de ação externos */
-    .actions {
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    .actions button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s, transform 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    button.reset-form {
-      background-color: var(--warning-color);
-      color: var(--text-color);
-    }
-    button.reset-form:hover,
-    button.reset-form:focus {
-      background-color: #d2922a;
-      transform: scale(1.02);
-    }
-    button.gerar-xml {
-      background-color: var(--primary-color);
-      color: var(--white);
-    }
-    button.gerar-xml:hover,
-    button.gerar-xml:focus {
-      background-color: #001d3d;
-      transform: scale(1.02);
-    }
-    /* Botões de ação nas linhas */
-    button.remove-row {
-      background-color: var(--danger-color);
-      color: var(--white);
-      border: none;
-      border-radius: 4px;
-      padding: 6px 12px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    button.remove-row:hover,
-    button.remove-row:focus {
-      background-color: #c12f2f;
-      transform: scale(1.05);
-    }
-    button.clone-row {
-      background-color: #28a745;
-      color: var(--white);
-      border: none;
-      border-radius: 4px;
-      padding: 6px 12px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      margin-right: 8px;
-    }
-    button.clone-row:hover,
-    button.clone-row:focus {
-      background-color: #218838;
-      transform: scale(1.05);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
-</head>
-<body>
-  <!-- Cabeçalho superior -->
-  <div id="topHeader">
-    <div id="dateTimeDisplay"></div>
-    <div class="fw-bold">PLUS VIAGENS E TURISMO LTDA</div>
-  </div>
-  
-  <main class="container" data-aos="fade-up" role="main">
-    <h1 data-aos="fade-down">Sistema de Integração de TFD</h1>
-    <!-- Cabeçalho do formulário -->
-    <div class="form-header" data-aos="fade-right">
-      <div class="btn-group">
-        <button class="add-row" onclick="addRow()" aria-label="Adicionar linha" title="Adicionar linha">
-          <i class="fas fa-plus"></i> Adicionar Linha
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Corporativo de Vendas</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <!-- Notyf CSS (para notificações toast) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
+    />
+    <!-- SweetAlert2 CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <!-- Google Fonts: Roboto e Merriweather -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather:700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+
+    <!-- jsPDF e autoTable para geração de PDF -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"
+      defer
+    ></script>
+    <!-- Day.js para datas -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js" defer></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <!-- Notyf JS -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js" defer></script>
+
+    <style>
+      /* RESET */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      /* Labels ocultas para acessibilidade */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+      /* Variáveis de cores corporativas */
+      :root {
+        --primary-color: #1e2a38;
+        --secondary-color: #00aeef;
+        --bg-color: #f5f5f5;
+        --text-color: #333;
+        --white: #fff;
+        --border-color: #e0e0e0;
+        --danger-color: #e63946;
+        --warning-color: #f1c40f;
+      }
+      .dark-mode {
+        --primary-color: #90caf9;
+        --secondary-color: #42a5f5;
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --white: #1e1e1e;
+        --border-color: #333;
+        --danger-color: #f44336;
+        --warning-color: #ffa726;
+      }
+      /* Centraliza textos e elementos estáticos */
+      body,
+      h1,
+      .form-header,
+      .actions,
+      table th,
+      table td {
+        text-align: center;
+      }
+      /* Mantém o texto digitado dentro dos campos à esquerda */
+      td input[type="text"],
+      td input[type="date"],
+      td textarea,
+      td select {
+        text-align: left;
+      }
+      /* Estilos base */
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        padding-top: 60px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      /* Cabeçalho fixo com data/hora */
+      #topHeader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 8px 20px;
+        z-index: 1100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #dateTimeDisplay {
+        font-size: 1rem;
+      }
+      /* Container principal */
+      main.container {
+        max-width: 1850px;
+        margin: 80px auto 20px auto;
+        background: var(--white);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: grid;
+        gap: 20px;
+      }
+      h1 {
+        font-family: "Merriweather", serif;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+      /* Cabeçalho do formulário */
+      .form-header {
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      }
+      .form-header .btn-group {
+        display: flex;
+        gap: 10px;
+      }
+      .form-header button {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .form-header button:hover,
+      .form-header button:focus {
+        background-color: #004f7a;
+        transform: scale(1.02);
+      }
+      .form-header select {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      .progress-indicator {
+        font-size: 0.9rem;
+        color: var(--white);
+        justify-self: end;
+      }
+      /* Tabela */
+      .table-container {
+        overflow-x: auto;
+      }
+      .table-container::-webkit-scrollbar {
+        height: 10px;
+      }
+      .table-container::-webkit-scrollbar-track {
+        background: var(--bg-color);
+      }
+      .table-container::-webkit-scrollbar-thumb {
+        background: var(--secondary-color);
+        border-radius: 4px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 2500px;
+        position: relative;
+      }
+      table th,
+      table td {
+        min-width: 150px;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+      }
+      thead th {
+        position: sticky;
+        top: 0;
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+        font-weight: 500;
+        z-index: 2;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color 0.2s, opacity 0.5s;
+        opacity: 0;
+        animation: fadeIn 0.5s forwards;
+      }
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tbody tr:hover {
+        background-color: #e6f3ff;
+      }
+      table th:nth-child(12),
+      table td:nth-child(12) {
+        min-width: 200px;
+      }
+      /* Inputs e textareas */
+      td input[type="text"],
+      td input[type="date"],
+      td textarea,
+      td select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+      td input[type="text"]:focus,
+      td input[type="date"]:focus,
+      td textarea:focus,
+      td select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 5px var(--secondary-color);
+        outline: none;
+      }
+      td textarea {
+        min-height: 50px;
+        resize: vertical;
+      }
+      td input[name="valor_tarifa"],
+      td input[name="markup"] {
+        pattern: "[0-9.]*";
+        inputmode: "decimal";
+      }
+      .input-error {
+        border: 2px solid var(--danger-color);
+      }
+      /* Botões de ação externos */
+      .actions {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      .actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      button.reset-form {
+        background-color: var(--warning-color);
+        color: var(--text-color);
+      }
+      button.reset-form:hover,
+      button.reset-form:focus {
+        background-color: #d2922a;
+        transform: scale(1.02);
+      }
+      button.gerar-xml {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+      button.gerar-xml:hover,
+      button.gerar-xml:focus {
+        background-color: #001d3d;
+        transform: scale(1.02);
+      }
+      /* Botões de ação nas linhas */
+      button.remove-row {
+        background-color: var(--danger-color);
+        color: var(--white);
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+      button.remove-row:hover,
+      button.remove-row:focus {
+        background-color: #c12f2f;
+        transform: scale(1.05);
+      }
+      button.clone-row {
+        background-color: #28a745;
+        color: var(--white);
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-right: 8px;
+      }
+      button.clone-row:hover,
+      button.clone-row:focus {
+        background-color: #218838;
+        transform: scale(1.05);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Como os scripts externos possuem defer, garantimos que nosso código será executado após o carregamento completo -->
+    <div id="topHeader">
+      <div id="dateTimeDisplay"></div>
+      <div class="fw-bold">PLUS VIAGENS E TURISMO LTDA</div>
+    </div>
+
+    <main class="container" data-aos="fade-up" role="main">
+      <h1 data-aos="fade-down">Sistema de Integração de TFD</h1>
+      <!-- Cabeçalho do formulário -->
+      <div class="form-header" data-aos="fade-right">
+        <div class="btn-group">
+          <button
+            class="add-row"
+            onclick="addRow()"
+            aria-label="Adicionar linha"
+            title="Adicionar linha"
+          >
+            <i class="fas fa-plus"></i> Adicionar Linha
+          </button>
+        </div>
+        <div class="btn-group">
+          <select id="clienteSelecionado" aria-label="Selecione o cliente">
+            <option value="01804">TFD LEM</option>
+            <option value="02026">TFD VDC</option>
+          </select>
+        </div>
+        <div class="btn-group">
+          <button
+            class="dark-mode-toggle"
+            onclick="toggleDarkMode()"
+            aria-label="Alternar modo escuro"
+            title="Alternar modo escuro"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+        <div class="progress-indicator" id="progressIndicator" aria-live="polite">
+          Linhas: 0
+        </div>
+      </div>
+      <!-- Tabela -->
+      <div class="table-container" data-aos="fade-left">
+        <table id="vendasTable" role="table" class="table table-striped">
+          <thead>
+            <tr role="row">
+              <th>Fornecedor de Emissão</th>
+              <th>Viação Emitida</th>
+              <th>Centro de Custos</th>
+              <th>Localizador</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Ida e Volta</th>
+              <th>Solicitante</th>
+              <th>Data Oficio</th>
+              <th>Emissor</th>
+              <th>Nº Oficio</th>
+              <th>Passageiro</th>
+              <th>Data de ida</th>
+              <th>Data de volta</th>
+              <th>Valor Tarifa</th>
+              <th>MU</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Linhas serão adicionadas dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Botões de ação -->
+      <div class="actions" data-aos="zoom-in">
+        <button
+          class="reset-form"
+          onclick="confirmReset()"
+          aria-label="Resetar formulário"
+          title="Resetar formulário"
+        >
+          <i class="fas fa-undo"></i> Resetar Formulário
+        </button>
+        <button
+          class="gerar-xml"
+          onclick="gerarXML()"
+          aria-label="Gerar XML"
+          title="Gerar XML"
+        >
+          <i class="fas fa-file-code"></i> Gerar XML
         </button>
       </div>
-      <div class="btn-group">
-        <select id="clienteSelecionado" aria-label="Selecione o cliente">
-          <option value="01804">TFD LEM</option>
-          <option value="02026">TFD VDC</option>
-        </select>
-      </div>
-      <div class="btn-group">
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Alternar modo escuro" title="Alternar modo escuro">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-      <div class="progress-indicator" id="progressIndicator" aria-live="polite">Linhas: 0</div>
-    </div>
-    <!-- Tabela -->
-    <div class="table-container" data-aos="fade-left">
-      <table id="vendasTable" role="table" class="table table-striped">
-        <thead>
-          <tr role="row">
-            <th>Fornecedor de Emissão</th>
-            <th>Viação Emitida</th>
-            <th>Centro de Custos</th>
-            <th>Localizador</th>
-            <th>Origem</th>
-            <th>Destino</th>
-            <th>Ida e Volta</th>
-            <th>Solicitante</th>
-            <th>Data Oficio</th>
-            <th>Emissor</th>
-            <th>Nº Oficio</th>
-            <th>Passageiro</th>
-            <th>Data de ida</th>
-            <th>Data de volta</th>
-            <th>Valor Tarifa</th>
-            <th>MU</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Linhas serão adicionadas dinamicamente -->
-        </tbody>
-      </table>
-    </div>
-    <!-- Botões de ação -->
-    <div class="actions" data-aos="zoom-in">
-      <button class="reset-form" onclick="confirmReset()" aria-label="Resetar formulário" title="Resetar formulário">
-        <i class="fas fa-undo"></i> Resetar Formulário
-      </button>
-      <button class="gerar-xml" onclick="gerarXML()" aria-label="Gerar XML" title="Gerar XML">
-        <i class="fas fa-file-code"></i> Gerar XML
-      </button>
-    </div>
-  </main>
-  
-  <!-- Bootstrap 5 JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- AOS JS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  
-  <!-- Funções Globais -->
-  <script>
-    // Atualiza o relógio no topo usando Day.js
-    function updateClock() {
-      const now = dayjs();
-      document.getElementById("dateTimeDisplay").textContent = now.format('DD/MM/YYYY HH:mm:ss');
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-    
-    // Alterna o modo claro/escuro
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
-    
-    // Atualiza o contador de linhas
-    function updateProgress() {
-      const rowCount = document.querySelectorAll("#vendasTable tbody tr").length;
-      document.getElementById("progressIndicator").textContent = `Linhas: ${rowCount}`;
-    }
-    
-    // Valida que os campos obrigatórios estão preenchidos
-    function validateRows() {
-      let valid = true;
-      const rows = document.querySelectorAll("#vendasTable tbody tr");
-      rows.forEach(row => {
-        const inputs = row.querySelectorAll("input, textarea");
-        inputs[0].classList.remove("input-error");
-        inputs[14].classList.remove("input-error");
-        if (!inputs[0].value.trim()) {
-          inputs[0].classList.add("input-error");
-          valid = false;
-        }
-        if (!inputs[14].value.trim()) {
-          inputs[14].classList.add("input-error");
-          valid = false;
-        }
-      });
-      return valid;
-    }
-    
-    // Adiciona uma nova linha com botões de clonar e remover
-    function addRow() {
-      const tbody = document.querySelector("#vendasTable tbody");
-      const newRow = document.createElement("tr");
-      const campos = [
-        'codigo_fornecedor', 'cia_iata', 'ccustos_cliente', 'localizador',
-        'origem', 'destino', 'ida_e_volta', 'solicitante', 'data_lancamento', 'emissor',
-        'numero_requisicao', 'passageiro', 'data_inicio_outros_svcs', 'data_fim_outros_svcs', 'valor_tarifa', 'markup'
-      ];
-      campos.forEach(campo => {
-        const td = document.createElement("td");
-        let element;
-        if (campo === "ida_e_volta") {
-          element = document.createElement("input");
-          element.type = "checkbox";
-          element.checked = false;
-        } 
-        else if (campo === "data_inicio_outros_svcs" || campo === "data_fim_outros_svcs" || campo === "data_lancamento") {
-          element = document.createElement("input");
-          element.type = "date";
-        } 
-        else if (campo === "solicitante") {
-          element = document.createElement("textarea");
-          element.rows = 3;
-        } else {
-          element = document.createElement("input");
-          element.type = "text";
-          if (campo === "valor_tarifa" || campo === "markup") {
-            element.pattern = "[0-9.]*";
-            element.inputMode = "decimal";
-          }
-          // Para o campo passageiro, adiciona limite de 60 caracteres e aviso
-          if (campo === "passageiro") {
-            element.maxLength = 60;
-            element.addEventListener("input", function(e) {
-              // Se atingir o limite e ainda não foi avisado, dispara o aviso
-              if (element.value.length === 60 && !element.dataset.warningShown) {
-                notyf.warning('Limite de 60 caracteres atingido!');
-                element.dataset.warningShown = "true";
-              } else if (element.value.length < 60) {
-                element.dataset.warningShown = "";
-              }
-            });
-          }
-        }
-        element.name = campo;
-        const label = document.createElement("label");
-        if(campo === "markup"){
-          label.textContent = "MU";
-          element.placeholder = "MU";
-          element.setAttribute("aria-label", "MU");
-        } else {
-          label.textContent = campo.replace(/_/g, " ");
-          element.placeholder = campo.replace(/_/g, " ");
-          element.setAttribute("aria-label", campo.replace(/_/g, " "));
-        }
-        label.classList.add("sr-only");
-        label.htmlFor = campo + "_" + Date.now();
-        element.id = label.htmlFor;
-        td.appendChild(label);
-        td.appendChild(element);
-        newRow.appendChild(td);
-      });
-      
-      // Célula de ações com botões de clonar e remover
-      const tdAcoes = document.createElement("td");
-      const btnClone = document.createElement("button");
-      btnClone.innerHTML = '<i class="fas fa-clone"></i>';
-      btnClone.classList.add("clone-row");
-      btnClone.setAttribute("aria-label", "Clonar linha");
-      btnClone.title = "Clonar linha";
-      btnClone.style.marginRight = "8px";
-      btnClone.onclick = function() {
-        cloneRow(newRow);
-      };
-      const btnRemover = document.createElement("button");
-      btnRemover.innerHTML = '<i class="fas fa-trash"></i>';
-      btnRemover.classList.add("remove-row");
-      btnRemover.setAttribute("aria-label", "Excluir linha");
-      btnRemover.title = "Excluir linha";
-      btnRemover.onclick = function() {
-        newRow.remove();
-        updateProgress();
-        notyf.success('Linha removida!');
-      };
-      tdAcoes.appendChild(btnClone);
-      tdAcoes.appendChild(btnRemover);
-      newRow.appendChild(tdAcoes);
-      tbody.appendChild(newRow);
-      updateProgress();
-      notyf.success('Linha adicionada!');
-    }
-    
-    // Clona uma linha e insere logo abaixo
-    function cloneRow(row) {
-      const clone = row.cloneNode(true);
-      const actionCell = clone.lastElementChild;
-      const cloneBtn = actionCell.querySelector(".clone-row");
-      cloneBtn.onclick = function() { cloneRow(clone); };
-      const removeBtn = actionCell.querySelector(".remove-row");
-      removeBtn.onclick = function() {
-        clone.remove();
-        updateProgress();
-        notyf.success('Linha removida!');
-      };
-      row.parentNode.insertBefore(clone, row.nextSibling);
-      updateProgress();
-      notyf.success('Linha clonada!');
-    }
-    
-    // Retorna a data/hora formatada para nome dos arquivos
-    function getFormattedDateTime() {
-      return dayjs().format('YYYYMMDD_HHmmss');
-    }
-    
-    // Helper: retorna o valor de um cell (input/textarea ou texto)
-    function getCellValue(cell) {
-      const input = cell.querySelector('input, textarea');
-      if (input) {
-        return input.value.trim();
-      }
-      return cell.textContent.trim();
-    }
-    
-    // Gera o comprovante em PDF usando jsPDF e autoTable
-    function gerarPDF(pdfFileName) {
-      const rows = document.querySelectorAll("#vendasTable tbody tr");
-      let pdfData = [];
-      rows.forEach((row, index) => {
-        const cells = row.querySelectorAll("td");
-        const localizador = getCellValue(cells[3]);
-        const origem = getCellValue(cells[4]);
-        const destino = getCellValue(cells[5]);
-        const emissor = getCellValue(cells[9]);
-        const numeroOficio = getCellValue(cells[10]);
-        const dataOficio = getCellValue(cells[8]);
-        const passageiro = getCellValue(cells[11]);
-        pdfData.push([
-          index + 1,
-          localizador,
-          passageiro,
-          origem,
-          destino,
-          numeroOficio,
-          dataOficio,
-          emissor
-        ]);
-      });
-      const headers = [["N° Linha", "Localizador", "Passageiro", "Origem", "Destino", "Nº Oficio", "Data Oficio", "Emissor"]];
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.autoTable({
-        head: headers,
-        body: pdfData,
-        startY: 20,
-        theme: 'grid',
-        headStyles: { fillColor: [30,42,56] },
-        styles: { fontSize: 10 }
-      });
-      doc.save(pdfFileName);
-    }
-    
-    // Gera o XML e o PDF e inicia os downloads
-    function gerarXML() {
-      const clienteSelecionado = document.getElementById("clienteSelecionado").value;
-      const rows = document.querySelectorAll("#vendasTable tbody tr");
-      if (rows.length === 0) {
-        Swal.fire('Atenção', 'Nenhuma linha adicionada. Adicione pelo menos uma linha antes de gerar os arquivos.', 'warning');
-        return;
-      }
-      if (!validateRows()) {
-        Swal.fire('Atenção', 'Preencha os campos obrigatórios (Fornecedor de Emissão e Valor Tarifa).', 'warning');
-        return;
-      }
-      const vendas = [];
-      rows.forEach(row => {
-        const inputs = row.querySelectorAll("input, textarea");
-        const dados = {
-          codigo_fornecedor: inputs[0].value || "F03063",
-          cia_iata: inputs[1].value || "RAPIDO FEDERAL",
-          ccustos_cliente: inputs[2].value || "NAO INFORMADO",
-          localizador: inputs[3].value || "",
-          origem: inputs[4].value || "",
-          destino: inputs[5].value || "",
-          ida_e_volta: inputs[6].checked,
-          solicitante: limparTexto(inputs[7].value),
-          data_lancamento: inputs[8].value,
-          emissor: inputs[9].value,
-          numero_requisicao: inputs[10].value,
-          passageiro: limparTexto(inputs[11].value),
-          data_inicio_outros_svcs: inputs[12].value,
-          data_fim_outros_svcs: inputs[13].value,
-          valor_tarifa: inputs[14].value,
-          markup: inputs[15].value
+    </main>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+    <!-- Nosso código inline: aguardamos o DOMContentLoaded -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Cria a instância global (window.notyf) para o Notyf
+        window.notyf = new Notyf();
+
+        // Função para atualizar o relógio usando dayjs
+        window.updateClock = function () {
+          const now = dayjs();
+          document.getElementById("dateTimeDisplay").textContent =
+            now.format("DD/MM/YYYY HH:mm:ss");
         };
-        if(dados.data_inicio_outros_svcs) {
-          dados.data_inicio_outros_svcs = dayjs(dados.data_inicio_outros_svcs).format('DD/MM/YYYY');
-        }
-        if(dados.data_fim_outros_svcs) {
-          dados.data_fim_outros_svcs = dayjs(dados.data_fim_outros_svcs).format('DD/MM/YYYY');
-        }
-        let origemVal = limparTexto(dados.origem);
-        let destinoVal = limparTexto(dados.destino);
-        let descricao_outros_svcs = "";
-        if (origemVal || destinoVal) {
-          descricao_outros_svcs = dados.ida_e_volta 
-            ? `${origemVal} - ${destinoVal} - ${origemVal}` 
-            : `${origemVal} - ${destinoVal}`;
-        }
-        const bilhete = `
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Alterna o modo claro/escuro
+        window.toggleDarkMode = function () {
+          document.body.classList.toggle("dark-mode");
+        };
+
+        // Atualiza o contador de linhas
+        window.updateProgress = function () {
+          const rowCount = document.querySelectorAll("#vendasTable tbody tr")
+            .length;
+          document.getElementById("progressIndicator").textContent = `Linhas: ${rowCount}`;
+        };
+
+        // Função atualizada para obter o valor da célula, tratando o campo emissor
+        window.getCellValue = function (cell) {
+          const selectElem = cell.querySelector("select");
+          if (selectElem) {
+            if (selectElem.value === "Outros") {
+              const customInput = cell.querySelector("input[name='emissor_custom']");
+              return customInput ? customInput.value.trim() : "";
+            }
+            return selectElem.value;
+          }
+          const input = cell.querySelector("input, textarea");
+          if (input) {
+            return input.value.trim();
+          }
+          return cell.textContent.trim();
+        };
+
+        // Validação das linhas (campos obrigatórios)
+        window.validateRows = function () {
+          let valid = true;
+          const rows = document.querySelectorAll("#vendasTable tbody tr");
+          rows.forEach((row) => {
+            const inputs = row.querySelectorAll("input, textarea");
+            inputs[0].classList.remove("input-error");
+            inputs[14].classList.remove("input-error");
+            if (!inputs[0].value.trim()) {
+              inputs[0].classList.add("input-error");
+              valid = false;
+            }
+            if (!inputs[14].value.trim()) {
+              inputs[14].classList.add("input-error");
+              valid = false;
+            }
+          });
+          return valid;
+        };
+
+        // Adiciona uma nova linha com os campos e botões
+        window.addRow = function () {
+          const tbody = document.querySelector("#vendasTable tbody");
+          const newRow = document.createElement("tr");
+          const campos = [
+            "codigo_fornecedor",
+            "cia_iata",
+            "ccustos_cliente",
+            "localizador",
+            "origem",
+            "destino",
+            "ida_e_volta",
+            "solicitante",
+            "data_lancamento",
+            "emissor",
+            "numero_requisicao",
+            "passageiro",
+            "data_inicio_outros_svcs",
+            "data_fim_outros_svcs",
+            "valor_tarifa",
+            "markup",
+          ];
+          campos.forEach((campo) => {
+            const td = document.createElement("td");
+            let element;
+            if (campo === "ida_e_volta") {
+              element = document.createElement("input");
+              element.type = "checkbox";
+              element.checked = false;
+            } else if (
+              campo === "data_inicio_outros_svcs" ||
+              campo === "data_fim_outros_svcs" ||
+              campo === "data_lancamento"
+            ) {
+              element = document.createElement("input");
+              element.type = "date";
+            } else if (campo === "solicitante") {
+              element = document.createElement("textarea");
+              element.rows = 3;
+            } else if (campo === "emissor") {
+              // Cria um container para o select e o input customizado
+              const container = document.createElement("div");
+              container.style.display = "flex";
+              container.style.flexDirection = "column";
+
+              const selectElem = document.createElement("select");
+              selectElem.name = campo;
+              selectElem.setAttribute("aria-label", "Emissor");
+              // Gera um id para associação com o label
+              const idEmissor = campo + "_" + Date.now();
+              selectElem.id = idEmissor;
+
+              const emissorOptions = [
+                "Fabiane",
+                "Eduardo",
+                "Fabio Vardi",
+                "Thomix",
+                "Edilson",
+                "Giovane",
+                "Henrique",
+                "Outros",
+              ];
+              emissorOptions.forEach((opt) => {
+                const option = document.createElement("option");
+                option.value = opt;
+                option.textContent = opt;
+                selectElem.appendChild(option);
+              });
+
+              const customInput = document.createElement("input");
+              customInput.type = "text";
+              customInput.name = "emissor_custom";
+              customInput.placeholder = "Escreva o emissor";
+              customInput.style.display = "none";
+
+              // Exibe o input customizado se "Outros" for selecionado
+              selectElem.addEventListener("change", function () {
+                if (selectElem.value === "Outros") {
+                  customInput.style.display = "block";
+                  customInput.focus();
+                } else {
+                  customInput.style.display = "none";
+                }
+              });
+
+              container.appendChild(selectElem);
+              container.appendChild(customInput);
+              element = container;
+            } else {
+              element = document.createElement("input");
+              element.type = "text";
+              if (campo === "valor_tarifa" || campo === "markup") {
+                element.pattern = "[0-9.]*";
+                element.inputMode = "decimal";
+              }
+              // Define limite de 60 caracteres para o campo passageiro e aviso
+              if (campo === "passageiro") {
+                element.maxLength = 60;
+                element.addEventListener("input", function (e) {
+                  if (
+                    element.value.length === 60 &&
+                    !element.dataset.warningShown
+                  ) {
+                    notyf.warning("Limite de 60 caracteres atingido!");
+                    element.dataset.warningShown = "true";
+                  } else if (element.value.length < 60) {
+                    element.dataset.warningShown = "";
+                  }
+                });
+              }
+            }
+            element.name = campo;
+            const label = document.createElement("label");
+            if (campo === "markup") {
+              label.textContent = "MU";
+              element.placeholder = "MU";
+              element.setAttribute("aria-label", "MU");
+            } else if (campo === "emissor") {
+              label.textContent = "Emissor";
+              // Para o campo emissor, o label ficará associado ao select
+              label.htmlFor = campo + "_" + Date.now();
+            } else {
+              label.textContent = campo.replace(/_/g, " ");
+              element.placeholder = campo.replace(/_/g, " ");
+              element.setAttribute("aria-label", campo.replace(/_/g, " "));
+            }
+            // Para campos que não sejam "emissor", definimos o id diretamente
+            if (campo !== "emissor") {
+              label.htmlFor = campo + "_" + Date.now();
+              element.id = label.htmlFor;
+            }
+            label.classList.add("sr-only");
+            td.appendChild(label);
+            td.appendChild(element);
+            newRow.appendChild(td);
+          });
+
+          // Célula de ações (botões de clonar e remover)
+          const tdAcoes = document.createElement("td");
+          const btnClone = document.createElement("button");
+          btnClone.innerHTML = '<i class="fas fa-clone"></i>';
+          btnClone.classList.add("clone-row");
+          btnClone.setAttribute("aria-label", "Clonar linha");
+          btnClone.title = "Clonar linha";
+          btnClone.style.marginRight = "8px";
+          btnClone.onclick = function () {
+            cloneRow(newRow);
+          };
+          const btnRemover = document.createElement("button");
+          btnRemover.innerHTML = '<i class="fas fa-trash"></i>';
+          btnRemover.classList.add("remove-row");
+          btnRemover.setAttribute("aria-label", "Excluir linha");
+          btnRemover.title = "Excluir linha";
+          btnRemover.onclick = function () {
+            newRow.remove();
+            updateProgress();
+            notyf.success("Linha removida!");
+          };
+          tdAcoes.appendChild(btnClone);
+          tdAcoes.appendChild(btnRemover);
+          newRow.appendChild(tdAcoes);
+          tbody.appendChild(newRow);
+          updateProgress();
+          notyf.success("Linha adicionada!");
+        };
+
+        // Função para clonar uma linha
+        window.cloneRow = function (row) {
+          const clone = row.cloneNode(true);
+          const actionCell = clone.lastElementChild;
+          const cloneBtn = actionCell.querySelector(".clone-row");
+          cloneBtn.onclick = function () {
+            cloneRow(clone);
+          };
+          const removeBtn = actionCell.querySelector(".remove-row");
+          removeBtn.onclick = function () {
+            clone.remove();
+            updateProgress();
+            notyf.success("Linha removida!");
+          };
+          row.parentNode.insertBefore(clone, row.nextSibling);
+          updateProgress();
+          notyf.success("Linha clonada!");
+        };
+
+        // Retorna data/hora formatada para nome de arquivos
+        window.getFormattedDateTime = function () {
+          return dayjs().format("YYYYMMDD_HHmmss");
+        };
+
+        // Gera o comprovante em PDF usando jsPDF e autoTable
+        window.gerarPDF = function (pdfFileName) {
+          const rows = document.querySelectorAll("#vendasTable tbody tr");
+          let pdfData = [];
+          rows.forEach((row, index) => {
+            const cells = row.querySelectorAll("td");
+            const localizador = getCellValue(cells[3]);
+            const origem = getCellValue(cells[4]);
+            const destino = getCellValue(cells[5]);
+            const emissor = getCellValue(cells[9]);
+            const numeroOficio = getCellValue(cells[10]);
+            const dataOficio = getCellValue(cells[8]);
+            const passageiro = getCellValue(cells[11]);
+            pdfData.push([
+              index + 1,
+              localizador,
+              passageiro,
+              origem,
+              destino,
+              numeroOficio,
+              dataOficio,
+              emissor,
+            ]);
+          });
+          const headers = [
+            [
+              "N° Linha",
+              "Localizador",
+              "Passageiro",
+              "Origem",
+              "Destino",
+              "Nº Oficio",
+              "Data Oficio",
+              "Emissor",
+            ],
+          ];
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+          doc.autoTable({
+            head: headers,
+            body: pdfData,
+            startY: 20,
+            theme: "grid",
+            headStyles: { fillColor: [30, 42, 56] },
+            styles: { fontSize: 10 },
+          });
+          doc.save(pdfFileName);
+        };
+
+        // Gera o XML e o PDF e inicia os downloads
+        window.gerarXML = function () {
+          const clienteSelecionado = document.getElementById("clienteSelecionado")
+            .value;
+          const rows = document.querySelectorAll("#vendasTable tbody tr");
+          if (rows.length === 0) {
+            Swal.fire(
+              "Atenção",
+              "Nenhuma linha adicionada. Adicione pelo menos uma linha antes de gerar os arquivos.",
+              "warning"
+            );
+            return;
+          }
+          if (!validateRows()) {
+            Swal.fire(
+              "Atenção",
+              "Preencha os campos obrigatórios (Fornecedor de Emissão e Valor Tarifa).",
+              "warning"
+            );
+            return;
+          }
+          const vendas = [];
+          rows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            const inputs = row.querySelectorAll("input, textarea");
+            const dados = {
+              codigo_fornecedor: inputs[0].value || "F03063",
+              cia_iata: inputs[1].value || "RAPIDO FEDERAL",
+              ccustos_cliente: inputs[2].value || "NAO INFORMADO",
+              localizador: inputs[3].value || "",
+              origem: inputs[4].value || "",
+              destino: inputs[5].value || "",
+              ida_e_volta: inputs[6].checked,
+              solicitante: limparTexto(inputs[7].value),
+              data_lancamento: inputs[8].value,
+              emissor: getCellValue(cells[9]),
+              numero_requisicao: inputs[10].value,
+              passageiro: limparTexto(inputs[11].value),
+              data_inicio_outros_svcs: inputs[12].value,
+              data_fim_outros_svcs: inputs[13].value,
+              valor_tarifa: inputs[14].value,
+              markup: inputs[15].value,
+            };
+            if (dados.data_inicio_outros_svcs) {
+              dados.data_inicio_outros_svcs = dayjs(
+                dados.data_inicio_outros_svcs
+              ).format("DD/MM/YYYY");
+            }
+            if (dados.data_fim_outros_svcs) {
+              dados.data_fim_outros_svcs = dayjs(
+                dados.data_fim_outros_svcs
+              ).format("DD/MM/YYYY");
+            }
+            let origemVal = limparTexto(dados.origem);
+            let destinoVal = limparTexto(dados.destino);
+            let descricao_outros_svcs = "";
+            if (origemVal || destinoVal) {
+              descricao_outros_svcs = dados.ida_e_volta
+                ? `${origemVal} - ${destinoVal} - ${origemVal}`
+                : `${origemVal} - ${destinoVal}`;
+            }
+            const bilhete = `
           <bilhete>
-            <idv_externo>${Math.floor(Math.random() * 100000000).toString().padStart(8, '0')}</idv_externo>
+            <idv_externo>${Math.floor(
+              Math.random() * 100000000
+            )
+              .toString()
+              .padStart(8, "0")}</idv_externo>
             <data_lancamento>${dados.data_lancamento}</data_lancamento>
             <codigo_produto>RDV</codigo_produto>
             <codigo_fornecedor>${dados.codigo_fornecedor}</codigo_fornecedor>
@@ -675,145 +864,147 @@
             </valores>
           </bilhete>
         `;
-        vendas.push(bilhete);
-      });
-      const xmlHeader = `
+            vendas.push(bilhete);
+          });
+          const xmlHeader = `
         <bilhetes>
           <nr_arquivo>39856210520240925</nr_arquivo>
-          <data_geracao>${new Date().toLocaleDateString('pt-BR')}</data_geracao>
-          <hora_geracao>${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</hora_geracao>
+          <data_geracao>${new Date().toLocaleDateString("pt-BR")}</data_geracao>
+          <hora_geracao>${new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}</hora_geracao>
           <nome_agencia>Plus Viagens</nome_agencia>
           <versao_xml>4</versao_xml>
       `;
-      const xmlFooter = `</bilhetes>`;
-      const xmlContent = xmlHeader + vendas.join("") + xmlFooter;
-      
-      const dateTimeStr = getFormattedDateTime();
-      let baseFileName = "";
-      if (clienteSelecionado === "02026") {
-        baseFileName = `VDC_${dateTimeStr}`;
-      } else if (clienteSelecionado === "01804") {
-        baseFileName = `LEM_${dateTimeStr}`;
-      } else {
-        baseFileName = `vendas_${dateTimeStr}`;
-      }
-      const xmlFileName = baseFileName + ".xml";
-      const pdfFileName = baseFileName + "_comprovante.pdf";
-      
-      // Download do XML
-      const blob = new Blob([xmlContent], { type: 'application/xml' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = xmlFileName;
-      link.click();
-      
-      // Gera e baixa o PDF
-      gerarPDF(pdfFileName);
-      
-      notyf.success('Arquivos gerados com sucesso!');
-      Swal.fire({
-        title: 'Sucesso!',
-        text: 'XML e comprovante em PDF gerados! Envie por e-mail para tic@plus.tur.br para a integração no financeiro.',
-        icon: 'success',
-        confirmButtonText: 'Fechar'
-      });
-    }
-    
-    // Função para limpar texto (removendo acentos e caracteres especiais)
-    function limparTexto(texto) {
-      return texto.normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")
-                  .replace(/[^a-zA-Z0-9\s\-/]/g, "");
-    }
-    
-    // Função global para resetar o formulário
-    function confirmReset() {
-      Swal.fire({
-        title: 'Confirmação',
-        text: 'Tem certeza que deseja resetar o formulário? Essa ação não pode ser desfeita.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.querySelector("#vendasTable tbody").innerHTML = "";
-          updateProgress();
-          Swal.fire('Formulário resetado!', '', 'success');
-        }
-      });
-    }
-  </script>
-  
-  <!-- Inicialização do AOS -->
-  <script>
-    AOS.init();
-  </script>
-  
-  <!-- Listener global para restringir os inputs de Valor Tarifa e MU -->
-  <script>
-    document.addEventListener("input", function(e) {
-      if (e.target && (e.target.name === "valor_tarifa" || e.target.name === "markup")) {
-        e.target.value = e.target.value.replace(/[^0-9.]/g, '');
-        const partes = e.target.value.split('.');
-        if (partes.length > 2) {
-          e.target.value = partes.shift() + '.' + partes.join('');
-        }
-      }
-    });
-  </script>
-  
-  <!-- Listener para recalcular automaticamente o MU a partir da Tarifa -->
-  <script>
-    document.addEventListener("input", function(e) {
-      if (e.target && e.target.name === "valor_tarifa") {
-        let row = e.target.closest("tr");
-        if (row) {
-          let tarifa = parseFloat(e.target.value);
-          if (!isNaN(tarifa)) {
-            let markupField = row.querySelector('input[name="markup"]');
-            if (markupField && document.activeElement !== markupField) {
-              let markupCalc = tarifa - (tarifa / 1.2);
-              markupCalc = Math.abs(markupCalc);
-              markupField.value = markupCalc.toFixed(2);
+          const xmlFooter = `</bilhetes>`;
+          const xmlContent = xmlHeader + vendas.join("") + xmlFooter;
+
+          const dateTimeStr = getFormattedDateTime();
+          let baseFileName = "";
+          if (clienteSelecionado === "02026") {
+            baseFileName = `VDC_${dateTimeStr}`;
+          } else if (clienteSelecionado === "01804") {
+            baseFileName = `LEM_${dateTimeStr}`;
+          } else {
+            baseFileName = `vendas_${dateTimeStr}`;
+          }
+          const xmlFileName = baseFileName + ".xml";
+          const pdfFileName = baseFileName + "_comprovante.pdf";
+
+          // Download do XML
+          const blob = new Blob([xmlContent], { type: "application/xml" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = xmlFileName;
+          link.click();
+
+          // Gera e baixa o PDF
+          gerarPDF(pdfFileName);
+
+          notyf.success("Arquivos gerados com sucesso!");
+          Swal.fire({
+            title: "Sucesso!",
+            text: "XML e comprovante em PDF gerados! Envie por e-mail para tic@plus.tur.br para a integração no financeiro.",
+            icon: "success",
+            confirmButtonText: "Fechar",
+          });
+        };
+
+        // Função para limpar texto (removendo acentos e caracteres especiais)
+        window.limparTexto = function (texto) {
+          return texto
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9\s\-/]/g, "");
+        };
+
+        // Função global para resetar o formulário
+        window.confirmReset = function () {
+          Swal.fire({
+            title: "Confirmação",
+            text: "Tem certeza que deseja resetar o formulário? Essa ação não pode ser desfeita.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              document.querySelector("#vendasTable tbody").innerHTML = "";
+              updateProgress();
+              Swal.fire("Formulário resetado!", "", "success");
+            }
+          });
+        };
+
+        // Inicializa o AOS (se ainda não estiver inicializado)
+        AOS.init();
+
+        // Listener para restringir os inputs de Valor Tarifa e MU (opcional)
+        document.addEventListener("input", function (e) {
+          if (
+            e.target &&
+            (e.target.name === "valor_tarifa" || e.target.name === "markup")
+          ) {
+            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+            const partes = e.target.value.split(".");
+            if (partes.length > 2) {
+              e.target.value = partes.shift() + "." + partes.join("");
             }
           }
-        }
-      }
-    });
-  </script>
-  
-  <!-- Listener para permitir colar datas no formato DD/MM/YYYY em campos de data -->
-  <script>
-    document.addEventListener("paste", function(e) {
-      const target = e.target;
-      if (target && target.type === "date") {
-        const pasteData = e.clipboardData.getData('text');
-        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        const match = pasteData.match(regex);
-        if(match) {
-          e.preventDefault();
-          const dd = match[1],
+        });
+
+        // Listener para recalcular automaticamente o MU a partir da Tarifa
+        document.addEventListener("input", function (e) {
+          if (e.target && e.target.name === "valor_tarifa") {
+            let row = e.target.closest("tr");
+            if (row) {
+              let tarifa = parseFloat(e.target.value);
+              if (!isNaN(tarifa)) {
+                let markupField = row.querySelector('input[name="markup"]');
+                if (markupField && document.activeElement !== markupField) {
+                  let markupCalc = tarifa - tarifa / 1.2;
+                  markupCalc = Math.abs(markupCalc);
+                  markupField.value = markupCalc.toFixed(2);
+                }
+              }
+            }
+          }
+        });
+
+        // Listener para permitir colar datas no formato DD/MM/YYYY em campos de data
+        document.addEventListener("paste", function (e) {
+          const target = e.target;
+          if (target && target.type === "date") {
+            const pasteData = e.clipboardData.getData("text");
+            const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            const match = pasteData.match(regex);
+            if (match) {
+              e.preventDefault();
+              const dd = match[1],
                 mm = match[2],
                 yyyy = match[3];
-          target.value = `${yyyy}-${mm}-${dd}`;
-        }
-      }
-    });
-  </script>
-  
-  <!-- Listener para apagar a data inteira ao pressionar Backspace em campos do tipo "date" -->
-  <script>
-    document.addEventListener("keydown", function(e) {
-      if (e.key === "Backspace" && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        const target = e.target;
-        if (target && target.type === "date") {
-          target.value = "";
-          e.preventDefault();
-        }
-      }
-    });
-  </script>
-  
-</body>
+              target.value = `${yyyy}-${mm}-${dd}`;
+            }
+          }
+        });
+
+        // Listener para apagar a data inteira ao pressionar Backspace em campos do tipo "date"
+        document.addEventListener("keydown", function (e) {
+          if (
+            e.key === "Backspace" &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.altKey
+          ) {
+            const target = e.target;
+            if (target && target.type === "date") {
+              target.value = "";
+              e.preventDefault();
+            }
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
