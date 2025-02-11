@@ -595,16 +595,15 @@
           destino: inputs[5].value || "",
           ida_e_volta: inputs[6].checked,
           solicitante: limparTexto(inputs[7].value),
-          data_lancamento: inputs[8].value, // em formato YYYY-MM-DD
+          data_lancamento: inputs[8].value,
           emissor: inputs[9].value,
           numero_requisicao: inputs[10].value,
           passageiro: limparTexto(inputs[11].value),
-          data_inicio_outros_svcs: inputs[12].value, // formato YYYY-MM-DD
-          data_fim_outros_svcs: inputs[13].value,    // formato YYYY-MM-DD
+          data_inicio_outros_svcs: inputs[12].value,
+          data_fim_outros_svcs: inputs[13].value,
           valor_tarifa: inputs[14].value,
           markup: inputs[15].value
         };
-        // Reformatando as datas de início e fim de serviços para DD/MM/YYYY
         if(dados.data_inicio_outros_svcs) {
           dados.data_inicio_outros_svcs = dayjs(dados.data_inicio_outros_svcs).format('DD/MM/YYYY');
         }
@@ -756,13 +755,34 @@
     });
   </script>
   
+  <!-- Listener para recalcular automaticamente o MU a partir da Tarifa -->
+  <script>
+    document.addEventListener("input", function(e) {
+      if (e.target && e.target.name === "valor_tarifa") {
+        // Procura a linha (tr) e o campo de MU na mesma linha
+        let row = e.target.closest("tr");
+        if (row) {
+          let tarifa = parseFloat(e.target.value);
+          if (!isNaN(tarifa)) {
+            let markupField = row.querySelector('input[name="markup"]');
+            // Atualiza o MU automaticamente se o campo não estiver em foco (permitindo edição manual)
+            if (markupField && document.activeElement !== markupField) {
+              let markupCalc = tarifa - (tarifa / 1.2);
+              markupCalc = Math.abs(markupCalc);
+              markupField.value = markupCalc.toFixed(2);
+            }
+          }
+        }
+      }
+    });
+  </script>
+  
   <!-- Listener para permitir colar datas no formato DD/MM/YYYY em campos de data -->
   <script>
     document.addEventListener("paste", function(e) {
       const target = e.target;
       if (target && target.type === "date") {
-        const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-        // Verifica se o dado copiado está no formato DD/MM/YYYY
+        const pasteData = e.clipboardData.getData('text');
         const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
         const match = pasteData.match(regex);
         if(match) {
@@ -770,12 +790,24 @@
           const dd = match[1],
                 mm = match[2],
                 yyyy = match[3];
-          // Converte para o formato ISO (YYYY-MM-DD) para o input type="date"
-          const isoDate = `${yyyy}-${mm}-${dd}`;
-          target.value = isoDate;
+          target.value = `${yyyy}-${mm}-${dd}`;
         }
       }
     });
   </script>
+  
+  <!-- Listener para apagar a data inteira ao pressionar Backspace em campos do tipo "date" -->
+  <script>
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Backspace" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const target = e.target;
+        if (target && target.type === "date") {
+          target.value = "";
+          e.preventDefault();
+        }
+      }
+    });
+  </script>
+  
 </body>
 </html>
