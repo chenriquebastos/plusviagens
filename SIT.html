@@ -49,8 +49,8 @@
     }
     /* Variáveis de cores corporativas */
     :root {
-      --primary-color: #1E2A38;   /* Azul escuro corporativo */
-      --secondary-color: #00AEEF; /* Azul vibrante */
+      --primary-color: #1E2A38;
+      --secondary-color: #00AEEF;
       --bg-color: #F5F5F5;
       --text-color: #333;
       --white: #fff;
@@ -73,7 +73,7 @@
       font-family: 'Roboto', sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      padding-top: 60px; /* Espaço para o cabeçalho */
+      padding-top: 60px;
       transition: background-color 0.3s, color 0.3s;
     }
     /* Cabeçalho fixo com data/hora */
@@ -225,7 +225,6 @@
     }
     td input[name="valor_tarifa"],
     td input[name="markup"] {
-      /* Permite apenas números e ponto */
       pattern: "[0-9.]*";
       inputmode: "decimal";
     }
@@ -436,7 +435,6 @@
           element.type = "checkbox";
           element.checked = false;
         } 
-        // Para os campos que representam datas, usamos type="date"
         else if (campo === "data_inicio_outros_svcs" || campo === "data_fim_outros_svcs" || campo === "data_lancamento") {
           element = document.createElement("input");
           element.type = "date";
@@ -451,10 +449,22 @@
             element.pattern = "[0-9.]*";
             element.inputMode = "decimal";
           }
+          // Para o campo passageiro, adiciona limite de 60 caracteres e aviso
+          if (campo === "passageiro") {
+            element.maxLength = 60;
+            element.addEventListener("input", function(e) {
+              // Se atingir o limite e ainda não foi avisado, dispara o aviso
+              if (element.value.length === 60 && !element.dataset.warningShown) {
+                notyf.warning('Limite de 60 caracteres atingido!');
+                element.dataset.warningShown = "true";
+              } else if (element.value.length < 60) {
+                element.dataset.warningShown = "";
+              }
+            });
+          }
         }
         element.name = campo;
         const label = document.createElement("label");
-        // Se for o campo "markup", exibe "MU" para o usuário
         if(campo === "markup"){
           label.textContent = "MU";
           element.placeholder = "MU";
@@ -744,11 +754,9 @@
   <script>
     document.addEventListener("input", function(e) {
       if (e.target && (e.target.name === "valor_tarifa" || e.target.name === "markup")) {
-        // Remove qualquer caractere que não seja dígito ou ponto
         e.target.value = e.target.value.replace(/[^0-9.]/g, '');
-        // Permite somente um ponto (caso haja mais de um, remove os extras)
         const partes = e.target.value.split('.');
-        if(partes.length > 2) {
+        if (partes.length > 2) {
           e.target.value = partes.shift() + '.' + partes.join('');
         }
       }
@@ -759,13 +767,11 @@
   <script>
     document.addEventListener("input", function(e) {
       if (e.target && e.target.name === "valor_tarifa") {
-        // Procura a linha (tr) e o campo de MU na mesma linha
         let row = e.target.closest("tr");
         if (row) {
           let tarifa = parseFloat(e.target.value);
           if (!isNaN(tarifa)) {
             let markupField = row.querySelector('input[name="markup"]');
-            // Atualiza o MU automaticamente se o campo não estiver em foco (permitindo edição manual)
             if (markupField && document.activeElement !== markupField) {
               let markupCalc = tarifa - (tarifa / 1.2);
               markupCalc = Math.abs(markupCalc);
