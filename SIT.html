@@ -88,19 +88,21 @@
         box-sizing: border-box;
       }
 
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+      }
+
+      html::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+      }
+
       body {
         font-family: 'Roboto', sans-serif;
         background-color: var(--background);
         color: var(--text);
         line-height: 1.6;
         transition: background-color 0.3s, color 0.3s;
-        overflow-y: auto;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
-      }
-
-      body::-webkit-scrollbar {
-        display: none; /* Chrome, Safari and Opera */
       }
 
       /* Header Corporativo */
@@ -215,7 +217,6 @@
         margin-top: 2rem;
         border-radius: 8px;
         overflow-x: auto;
-        overflow-y: hidden;
         border: 1px solid var(--border);
         padding-bottom: 16px;
       }
