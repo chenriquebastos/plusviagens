@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Desconto</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -26,6 +35,9 @@
             max-width: 500px;
             width: 100%;
             text-align: center;
+            animation: slideInUp 0.5s ease-out;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .form-container h1 {
@@ -77,6 +89,10 @@
             font-weight: bold;
             width: 48%;
             transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .form-group button:hover {
@@ -120,6 +136,10 @@
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .copy-button:hover {
@@ -128,11 +148,8 @@
             box-shadow: 0 6px 15px rgba(79, 110, 240, 0.5);
         }
 
-        .copy-feedback {
-            color: green;
-            font-size: 16px;
-            margin-top: 10px;
-            text-align: center;
+        .copy-button i {
+            font-size: 18px;
         }
 
         @media (max-width: 600px) {
@@ -149,42 +166,223 @@
                 flex-direction: column;
             }
         }
+
+        /* Adicionando estilos para o cabeçalho */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .datetime {
+            font-weight: 500;
+        }
+
+        .saudacao {
+            font-weight: 500;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .version {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Ajustando o container principal */
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Ajustando o espaçamento do conteúdo principal */
+        .form-container {
+            margin: 60px 20px 20px;
+        }
+
+        @media (max-width: 600px) {
+            .header-container {
+                flex-direction: column;
+                gap: 5px;
+                text-align: center;
+                padding: 5px 20px;
+            }
+
+            .saudacao {
+                order: -1; /* Coloca a saudação no topo em dispositivos móveis */
+            }
+
+            .form-container {
+                margin: 70px 20px 20px;
+            }
+        }
+
+        /* Estilo personalizado para as notificações */
+        .toastify {
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Animações para elementos */
+        .animate-element {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Estilo para ícones */
+        .icon {
+            margin-right: 8px;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Estilo para o campo de porcentagem */
+        .porcentagem-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .porcentagem-container.visible {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilo para os campos dinâmicos */
+        .campos-outros-container {
+            display: none;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .campos-outros-container.visible {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>Calculadora de Desconto</h1>
-        <div class="form-group">
-            <label for="servico">Tipo de Serviço:</label>
-            <select id="servico" required>
-                <option value="">Selecione...</option>
-                <option value="aereo">Aéreo</option>
-                <option value="hospedagem">Hospedagem e serviços relacionados</option>
-            </select>
+    <div class="main-container">
+        <div class="header-container">
+            <div class="datetime" id="datetime"></div>
+            <div class="saudacao" id="saudacao"></div>
+            <div class="version">v1.4.4</div>
         </div>
-        <div class="form-group">
-            <label for="valorTarifa">Valor da Tarifa (R$):</label>
-            <input type="text" id="valorTarifa" required oninput="CalculadoraDesconto.formatarValor(this)">
-        </div>
-        <div class="form-group button-group">
-            <button type="button" onclick="CalculadoraDesconto.calcularDesconto()">Calcular Desconto</button>
-            <button type="button" class="reset-button" onclick="CalculadoraDesconto.refazerCalculo()">Refazer</button>
-        </div>
-        <div class="result-container" id="resultContainer" style="display: none;">
-            <div class="result-line">
-                <span>Valor sem desconto:</span>
-                <span id="valorSemDesconto"></span>
+        <div class="form-container animate__animated animate__fadeIn">
+            <h1><i class="fas fa-calculator icon"></i>Calculadora de Desconto</h1>
+            <div class="form-group">
+                <label for="servico">
+                    <i class="fas fa-tags icon"></i>Tipo de Serviço:
+                </label>
+                <select id="servico" required data-tippy-content="Selecione o tipo de serviço para calcular o desconto" onchange="CalculadoraDesconto.handleServicoChange(this.value)">
+                    <option value="">Selecione...</option>
+                    <option value="aereo">Aéreo</option>
+                    <option value="hospedagem">Hospedagem e serviços relacionados</option>
+                    <option value="outros">Outros</option>
+                </select>
             </div>
-            <div class="result-line">
-                <span>Desconto (<span id="porcentagemDesconto"></span>):</span>
-                <span id="valorDesconto"></span>
+            <div class="form-group campos-outros-container" id="camposOutrosContainer">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="nomeServico">
+                        <i class="fas fa-file-signature icon"></i>Nome do Serviço:
+                    </label>
+                    <input type="text" 
+                           id="nomeServico" 
+                           required 
+                           data-tippy-content="Digite o nome do serviço"
+                           placeholder="Ex: Seguro Viagem">
+                </div>
             </div>
-            <div class="result-line">
-                <span>Valor com desconto:</span>
-                <span id="valorComDesconto"></span>
+            <div class="form-group">
+                <label for="valorTarifa">
+                    <i class="fas fa-dollar-sign icon"></i>Valor da Tarifa (R$):
+                </label>
+                <input type="text" id="valorTarifa" required 
+                       data-tippy-content="Digite o valor da tarifa para calcular o desconto"
+                       oninput="CalculadoraDesconto.formatarValor(this)">
             </div>
-            <button class="copy-button" onclick="CalculadoraDesconto.copiarResultado()" aria-label="Copiar resultado">Copiar Resultado</button>
-            <div class="copy-feedback" id="copyFeedback" aria-live="polite" style="display: none;"></div>
+            <div class="form-group campos-outros-container" id="porcentagemContainer">
+                <div class="form-group">
+                    <label for="porcentagemDesconto">
+                        <i class="fas fa-percent icon"></i>Porcentagem de Desconto:
+                    </label>
+                    <input type="text" 
+                           id="porcentagemDesconto" 
+                           required 
+                           data-tippy-content="Digite a porcentagem de desconto (ex: 10,5)"
+                           placeholder="Ex: 10,5"
+                           maxlength="5">
+                </div>
+            </div>
+            <div class="form-group button-group">
+                <button type="button" onclick="CalculadoraDesconto.calcularDesconto()">
+                    <i class="fas fa-percentage"></i>Calcular Desconto
+                </button>
+                <button type="button" class="reset-button" onclick="CalculadoraDesconto.refazerCalculo()">
+                    <i class="fas fa-redo"></i>Refazer
+                </button>
+            </div>
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <div class="result-line">
+                    <span>Tipo de Serviço:</span>
+                    <span id="tipoDesconto"></span>
+                </div>
+                <div class="result-line">
+                    <span>Valor sem desconto:</span>
+                    <span id="valorSemDesconto"></span>
+                </div>
+                <div class="result-line">
+                    <span>Desconto (<span id="porcentagemDescontoResultado"></span>):</span>
+                    <span id="valorDesconto"></span>
+                </div>
+                <div class="result-line">
+                    <span>Valor com desconto:</span>
+                    <span id="valorComDesconto"></span>
+                </div>
+                <button class="copy-button" onclick="CalculadoraDesconto.copiarResultado()" aria-label="Copiar resultado">
+                    <i class="fas fa-copy"></i>Copiar Resultado
+                </button>
+            </div>
         </div>
     </div>
     <script>
@@ -202,6 +400,26 @@
             },
 
             /**
+             * Exibe uma notificação usando Toastify
+             * @param {string} mensagem - A mensagem a ser exibida
+             * @param {string} tipo - O tipo de notificação ('erro' ou 'sucesso')
+             */
+            mostrarNotificacao: function(mensagem, tipo = 'erro') {
+                const config = {
+                    text: mensagem,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    style: {
+                        background: tipo === 'erro' ? "#ff5555" : "#4CAF50",
+                        boxShadow: "0 3px 6px rgba(0,0,0,0.16)",
+                    }
+                };
+                Toastify(config).showToast();
+            },
+
+            /**
              * Valida se o valor da tarifa é um número válido e maior que zero.
              * @param {number} valor - O valor da tarifa.
              * @returns {boolean} - Retorna true se o valor for válido, caso contrário, false.
@@ -211,56 +429,124 @@
             },
 
             /**
-             * Exibe uma mensagem de erro temporária na tela.
-             * @param {string} mensagem - A mensagem de erro a ser exibida.
+             * Gerencia a exibição do campo de porcentagem baseado no serviço selecionado
+             * @param {string} servico - O serviço selecionado
              */
-            mostrarErro: function(mensagem) {
-                const feedback = document.createElement('div');
-                feedback.className = 'error-feedback';
-                feedback.innerText = mensagem;
-                document.body.appendChild(feedback);
-                setTimeout(() => feedback.remove(), 3000);
+            handleServicoChange: function(servico) {
+                const nomeServicoContainer = document.getElementById('camposOutrosContainer');
+                const porcentagemContainer = document.getElementById('porcentagemContainer');
+                if (servico === 'outros') {
+                    nomeServicoContainer.classList.add('visible');
+                    porcentagemContainer.classList.add('visible');
+                } else {
+                    nomeServicoContainer.classList.remove('visible');
+                    porcentagemContainer.classList.remove('visible');
+                    document.getElementById('porcentagemDesconto').value = '';
+                    document.getElementById('nomeServico').value = '';
+                }
+            },
+
+            /**
+             * Formata o valor da porcentagem
+             * @param {HTMLInputElement} input - O campo de entrada da porcentagem
+             */
+            formatarPorcentagem: function(input) {
+                let valor = input.value.replace(/[^\d,]/g, '');
+                if (valor.includes(',')) {
+                    const partes = valor.split(',');
+                    if (partes[1].length > 2) partes[1] = partes[1].substring(0, 2);
+                    valor = partes.join(',');
+                }
+                input.value = valor;
             },
 
             /**
              * Calcula o desconto com base no tipo de serviço e no valor da tarifa.
              */
             calcularDesconto: function() {
-                const servico = document.getElementById('servico').value;
-                let valorTarifa = document.getElementById('valorTarifa').value.replace(/\./g, '').replace(',', '.');
+                // Adicionar loading state
+                const button = document.querySelector('button[onclick="CalculadoraDesconto.calcularDesconto()"]');
+                button.classList.add('loading');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Calculando...';
 
-                valorTarifa = parseFloat(valorTarifa);
+                setTimeout(() => {
+                    const servico = document.getElementById('servico').value;
+                    let valorTarifa = document.getElementById('valorTarifa').value.replace(/\./g, '').replace(',', '.');
 
-                if (!this.validarValor(valorTarifa)) {
-                    this.mostrarErro('Por favor, insira um valor válido para a tarifa.');
-                    return;
-                }
+                    valorTarifa = parseFloat(valorTarifa);
 
-                if (!servico) {
-                    this.mostrarErro('Por favor, selecione um tipo de serviço.');
-                    return;
-                }
+                    // Restaurar estado do botão antes dos retornos de erro
+                    const restaurarBotao = () => {
+                        button.classList.remove('loading');
+                        button.innerHTML = '<i class="fas fa-percentage"></i>Calcular Desconto';
+                    };
 
-                let desconto = 0;
+                    if (!this.validarValor(valorTarifa)) {
+                        this.mostrarNotificacao('Por favor, insira um valor válido para a tarifa.');
+                        restaurarBotao();
+                        return;
+                    }
 
-                if (servico === 'aereo') {
-                    desconto = 0.05; // 5% de desconto
-                } else if (servico === 'hospedagem') {
-                    desconto = 0.0815; // 8.15% de desconto
-                }
+                    if (!servico) {
+                        this.mostrarNotificacao('Por favor, selecione um tipo de serviço.');
+                        restaurarBotao();
+                        return;
+                    }
 
-                if (desconto > 0) {
-                    const valorDesconto = valorTarifa * desconto;
-                    const valorComDesconto = valorTarifa - valorDesconto;
+                    let desconto = 0;
+                    let tipoDesconto = '';
 
-                    document.getElementById('valorSemDesconto').innerText = `R$ ${valorTarifa.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('porcentagemDesconto').innerText = `${(desconto * 100).toFixed(2)}%`;
-                    document.getElementById('valorDesconto').innerText = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('valorComDesconto').innerText = `R$ ${valorComDesconto.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('resultContainer').style.display = 'block';
-                } else {
-                    document.getElementById('resultContainer').style.display = 'none';
-                }
+                    if (servico === 'aereo') {
+                        desconto = 0.05; // 5% de desconto
+                        tipoDesconto = 'Aéreo';
+                    } else if (servico === 'hospedagem') {
+                        desconto = 0.0815; // 8.15% de desconto
+                        tipoDesconto = 'Hospedagem e serviços relacionados';
+                    } else if (servico === 'outros') {
+                        const porcentagem = document.getElementById('porcentagemDesconto').value;
+                        const nomeServico = document.getElementById('nomeServico').value;
+
+                        if (!nomeServico) {
+                            this.mostrarNotificacao('Por favor, insira o nome do serviço.');
+                            restaurarBotao();
+                            return;
+                        }
+
+                        if (!porcentagem) {
+                            this.mostrarNotificacao('Por favor, insira a porcentagem de desconto.');
+                            restaurarBotao();
+                            return;
+                        }
+                        desconto = parseFloat(porcentagem.replace(',', '.')) / 100;
+                        if (isNaN(desconto) || desconto <= 0 || desconto >= 1) {
+                            this.mostrarNotificacao('Por favor, insira uma porcentagem válida entre 0 e 100.');
+                            restaurarBotao();
+                            return;
+                        }
+                        tipoDesconto = nomeServico;
+                    }
+
+                    if (desconto > 0) {
+                        const valorDesconto = valorTarifa * desconto;
+                        const valorComDesconto = valorTarifa - valorDesconto;
+
+                        document.getElementById('valorSemDesconto').innerText = `R$ ${valorTarifa.toFixed(2).replace('.', ',')}`;
+                        document.getElementById('porcentagemDescontoResultado').innerText = `${(desconto * 100).toFixed(2)}%`;
+                        document.getElementById('tipoDesconto').innerText = tipoDesconto;
+                        document.getElementById('valorDesconto').innerText = `R$ ${valorDesconto.toFixed(2).replace('.', ',')}`;
+                        document.getElementById('valorComDesconto').innerText = `R$ ${valorComDesconto.toFixed(2).replace('.', ',')}`;
+                        document.getElementById('resultContainer').style.display = 'block';
+
+                        // Animate result container
+                        const resultContainer = document.getElementById('resultContainer');
+                        resultContainer.classList.add('animate__animated', 'animate__fadeInUp');
+                    } else {
+                        document.getElementById('resultContainer').style.display = 'none';
+                    }
+
+                    // Remove loading state (mantido para consistência)
+                    restaurarBotao();
+                }, 500);
             },
 
             /**
@@ -268,11 +554,12 @@
              */
             copiarResultado: function() {
                 const valorSemDesconto = document.getElementById('valorSemDesconto').innerText;
-                const porcentagemDesconto = document.getElementById('porcentagemDesconto').innerText;
+                const porcentagemDesconto = document.getElementById('porcentagemDescontoResultado').innerText;
+                const tipoDesconto = document.getElementById('tipoDesconto').innerText;
                 const valorDesconto = document.getElementById('valorDesconto').innerText;
                 const valorComDesconto = document.getElementById('valorComDesconto').innerText;
 
-                const resultadoHTML = `<div class="gmail_default" style="font-family: 'trebuchet ms', sans-serif; color: rgb(11, 83, 148); font-size: small;"><span style="background-color: rgb(255, 255, 255);"><b style="font-family: 'Trebuchet MS';">Detalhamento de valores com aplicação do desconto:</b><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor sem aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorSemDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Desconto (${porcentagemDesconto}):</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor com aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorComDesconto}</span></span><br clear="all"></div>`;
+                const resultadoHTML = `<div class="gmail_default" style="font-family: 'trebuchet ms', sans-serif; color: rgb(11, 83, 148); font-size: small;"><span style="background-color: rgb(255, 255, 255);"><b style="font-family: 'Trebuchet MS';">Detalhamento de valores com aplicação do desconto:</b><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Tipo de Serviço:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${tipoDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor sem aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorSemDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Desconto (${porcentagemDesconto}):</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorDesconto}</span><br style="font-family: 'Trebuchet MS';"><b style="font-family: 'Trebuchet MS';">Valor com aplicação do desconto:</b><span style="font-family: 'Trebuchet MS';">&nbsp;${valorComDesconto}</span></span><br clear="all"></div>`;
 
                 const tempElement = document.createElement('div');
                 tempElement.innerHTML = resultadoHTML;
@@ -286,13 +573,19 @@
 
                 try {
                     document.execCommand('copy');
-                    const feedback = document.getElementById('copyFeedback');
-                    feedback.innerText = 'Resultado copiado com sucesso!';
-                    feedback.style.display = 'block';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Copiado!',
+                        text: 'Resultado copiado com sucesso!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 } catch (err) {
-                    const feedback = document.getElementById('copyFeedback');
-                    feedback.innerText = 'Falha ao copiar o resultado.';
-                    feedback.style.display = 'block';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Falha ao copiar o resultado'
+                    });
                 }
 
                 document.body.removeChild(tempElement);
@@ -304,26 +597,48 @@
             refazerCalculo: function() {
                 document.getElementById('servico').value = '';
                 document.getElementById('valorTarifa').value = '';
+                document.getElementById('porcentagemDesconto').value = '';
+                document.getElementById('nomeServico').value = '';
+                document.getElementById('camposOutrosContainer').classList.remove('visible');
                 document.getElementById('resultContainer').style.display = 'none';
-                document.getElementById('copyFeedback').style.display = 'none';
             }
         };
 
-        // Event listeners
-        document.getElementById('valorTarifa').addEventListener('input', function() {
-            CalculadoraDesconto.formatarValor(this);
+        // Mantendo apenas a atualização de data e hora
+        function atualizarDataHora() {
+            const agora = new Date();
+            const formatoData = agora.toLocaleDateString('pt-BR');
+            const formatoHora = agora.toLocaleTimeString('pt-BR');
+            document.getElementById('datetime').textContent = `${formatoData} ${formatoHora}`;
+
+            // Atualizar saudação
+            const hora = agora.getHours();
+            let saudacao = '';
+            
+            if (hora >= 5 && hora < 12) {
+                saudacao = 'Bom dia';
+            } else if (hora >= 12 && hora < 18) {
+                saudacao = 'Boa tarde';
+            } else {
+                saudacao = 'Boa noite';
+            }
+            
+            document.getElementById('saudacao').textContent = saudacao;
+        }
+
+        setInterval(atualizarDataHora, 1000);
+        atualizarDataHora();
+
+        // Inicializar tooltips
+        tippy('[data-tippy-content]', {
+            placement: 'top',
+            animation: 'scale',
+            theme: 'light'
         });
 
-        document.querySelector('.form-group button[onclick="CalculadoraDesconto.calcularDesconto()"]').addEventListener('click', function() {
-            CalculadoraDesconto.calcularDesconto();
-        });
-
-        document.querySelector('.reset-button').addEventListener('click', function() {
-            CalculadoraDesconto.refazerCalculo();
-        });
-
-        document.querySelector('.copy-button').addEventListener('click', function() {
-            CalculadoraDesconto.copiarResultado();
+        // Adicionar evento para formatar porcentagem
+        document.getElementById('porcentagemDesconto').addEventListener('input', function() {
+            CalculadoraDesconto.formatarPorcentagem(this);
         });
     </script>
 </body>
