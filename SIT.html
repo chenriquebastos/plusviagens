@@ -54,389 +54,525 @@
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js" defer></script>
 
     <style>
-      /* RESET */
+      :root {
+        --primary: #1a4789;
+        --primary-dark: #0d2b54;
+        --secondary: #3c6eb4;
+        --accent: #ff6b00;
+        --success: #2d8a47;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --background: #f4f6f9;
+        --surface: #ffffff;
+        --text: #2c3e50;
+        --border: #dee2e6;
+        --header-bg: #1a4789;
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .dark-mode {
+        --primary: #3c6eb4;
+        --primary-dark: #1a4789;
+        --secondary: #5d8ac9;
+        --accent: #ff8533;
+        --background: #1a202c;
+        --surface: #2d3748;
+        --text: #e2e8f0;
+        --border: #4a5568;
+        --header-bg: #2d3748;
+      }
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-      /* Labels ocultas para acessibilidade */
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;
-      }
-      /* Variáveis de cores corporativas */
-      :root {
-        --primary-color: #1e2a38;
-        --secondary-color: #00aeef;
-        --bg-color: #f5f5f5;
-        --text-color: #333;
-        --white: #fff;
-        --border-color: #e0e0e0;
-        --danger-color: #e63946;
-        --warning-color: #f1c40f;
-      }
-      .dark-mode {
-        --primary-color: #90caf9;
-        --secondary-color: #42a5f5;
-        --bg-color: #121212;
-        --text-color: #e0e0e0;
-        --white: #1e1e1e;
-        --border-color: #333;
-        --danger-color: #f44336;
-        --warning-color: #ffa726;
-      }
-      /* Centraliza textos e elementos estáticos */
-      body,
-      h1,
-      .form-header,
-      .actions,
-      table th,
-      table td {
-        text-align: center;
-      }
-      /* Mantém o texto digitado dentro dos campos à esquerda */
-      td input[type="text"],
-      td input[type="date"],
-      td textarea,
-      td select {
-        text-align: left;
-      }
-      /* Estilos base */
+
       body {
-        font-family: "Roboto", sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        padding-top: 60px;
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
         transition: background-color 0.3s, color 0.3s;
+        overflow-y: auto;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
       }
-      /* Cabeçalho fixo com data/hora */
+
+      body::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+      }
+
+      /* Header Corporativo */
       #topHeader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: var(--primary-color);
-        color: var(--white);
-        padding: 8px 20px;
-        z-index: 1100;
+        background: var(--header-bg);
+        background-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .header-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        max-width: 1920px;
+        margin: 0 auto;
       }
-      #dateTimeDisplay {
-        font-size: 1rem;
+
+      .company-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
       }
-      /* Container principal */
+
+      .company-logo {
+        font-size: 1.5rem;
+        color: var(--accent);
+      }
+
+      /* Container Principal com Tema Rodoviário */
       main.container {
-        max-width: 1850px;
-        margin: 80px auto 20px auto;
-        background: var(--white);
-        padding: 20px;
+        max-width: 1920px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .content-card {
+        background: var(--surface);
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        display: grid;
-        gap: 20px;
+        box-shadow: var(--card-shadow);
+        padding: 2rem;
+        border-top: 4px solid var(--accent);
       }
-      h1 {
-        font-family: "Merriweather", serif;
-        color: var(--primary-color);
-        margin-bottom: 10px;
+
+      /* Título com Ícone */
+      .page-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        color: var(--primary);
+        font-size: 1.75rem;
       }
-      /* Cabeçalho do formulário */
+
+      .page-title i {
+        color: var(--accent);
+      }
+
+      /* Form Header Estilizado */
       .form-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
         display: grid;
-        grid-template-columns: 1fr auto auto auto;
+        grid-template-columns: auto 1fr auto;
+        gap: 1.5rem;
         align-items: center;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 4px;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       }
-      .form-header .btn-group {
-        display: flex;
-        gap: 10px;
-      }
-      .form-header button {
-        background-color: var(--secondary-color);
-        color: var(--white);
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        display: flex;
+
+      /* Botões Corporativos */
+      .btn {
+        display: inline-flex;
         align-items: center;
-        gap: 5px;
-      }
-      .form-header button:hover,
-      .form-header button:focus {
-        background-color: #004f7a;
-        transform: scale(1.02);
-      }
-      .form-header select {
-        padding: 10px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        font-size: 1rem;
-      }
-      .progress-indicator {
-        font-size: 0.9rem;
-        color: var(--white);
-        justify-self: end;
-      }
-      /* Tabela */
-      .table-container {
-        overflow-x: auto;
-      }
-      .table-container::-webkit-scrollbar {
-        height: 10px;
-      }
-      .table-container::-webkit-scrollbar-track {
-        background: var(--bg-color);
-      }
-      .table-container::-webkit-scrollbar-thumb {
-        background: var(--secondary-color);
-        border-radius: 4px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 2500px;
-        position: relative;
-      }
-      table th,
-      table td {
-        min-width: 150px;
-        padding: 12px;
-        border: 1px solid var(--border-color);
-      }
-      thead th {
-        position: sticky;
-        top: 0;
-        background-color: var(--primary-color) !important;
-        color: var(--white) !important;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
         font-weight: 500;
-        z-index: 2;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
       }
-      tbody tr {
-        border-bottom: 1px solid var(--border-color);
-        transition: background-color 0.2s, opacity 0.5s;
-        opacity: 0;
-        animation: fadeIn 0.5s forwards;
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
       }
-      tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
+
+      .btn-primary:hover {
+        background: #e65c00;
+        transform: translateY(-1px);
       }
-      tbody tr:hover {
-        background-color: #e6f3ff;
+
+      .btn-secondary {
+        background: var(--secondary);
+        color: white;
       }
-      table th:nth-child(12),
-      table td:nth-child(12) {
+
+      /* Select Estilizado */
+      .form-select {
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--text);
         min-width: 200px;
       }
-      /* Inputs e textareas */
+
+      /* Tabela Corporativa */
+      .table-container {
+        margin-top: 2rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--border);
+        padding-bottom: 16px;
+      }
+
+      table {
+        width: max-content;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: unset;
+        table-layout: fixed;
+      }
+
+      th {
+        background: var(--primary);
+        color: white;
+        font-weight: 500;
+        text-align: left;
+        padding: 1rem;
+        font-size: 0.95rem;
+        position: relative;
+        user-select: none;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        min-width: 100px;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      tr:hover td {
+        background: rgba(60, 110, 180, 0.05);
+      }
+
+      /* Inputs Corporativos */
+      .form-input, input[type="text"], input[type="date"], textarea, select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .form-input:focus, 
+      input[type="text"]:focus, 
+      input[type="date"]:focus, 
+      textarea:focus, 
+      select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(26, 71, 137, 0.1);
+        transform: translateY(-1px);
+      }
+
+      /* Estilo específico para textareas */
+      textarea {
+        min-height: unset;
+        height: 38px;
+        resize: none;
+        line-height: 1.5;
+        padding: 8px 12px;
+      }
+
+      /* Estilo para checkbox */
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        border: 2px solid var(--primary);
+        cursor: pointer;
+      }
+
+      /* Botões de Ação */
+      .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      /* Ícones na Tabela */
+      .table-icon {
+        color: var(--primary);
+        margin-right: 0.5rem;
+      }
+
+      /* Estilização da barra de rolagem */
+      .table-container::-webkit-scrollbar {
+        height: 16px;
+      }
+
+      .table-container::-webkit-scrollbar-track {
+        background: var(--background);
+        border-radius: 8px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 8px;
+        border: 3px solid var(--background);
+        min-width: 50px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+        cursor: pointer;
+      }
+
+      /* Container para os botões de ação */
+      .row-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Atualização dos botões de ação */
+      .action-btn {
+        width: 38px;
+        height: 38px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-duplicate {
+        background-color: var(--primary);
+      }
+
+      .btn-duplicate:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-delete {
+        background-color: var(--danger);
+      }
+
+      .btn-delete:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Estilo para placeholder */
+      ::placeholder {
+        color: #94a3b8;
+        opacity: 0.7;
+      }
+
+      .resize-handle {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        cursor: col-resize;
+        background-color: rgba(255, 255, 255, 0.2);
+        transition: background-color 0.2s;
+      }
+
+      .resize-handle:hover {
+        background-color: var(--accent);
+      }
+
+      /* Indicador visual durante o redimensionamento */
+      th.resizing {
+        background-color: var(--primary-dark);
+      }
+
+      th.resizing .resize-handle {
+        background-color: var(--accent);
+      }
+
+      /* Ajuste dos inputs para se adequarem melhor às células */
       td input[type="text"],
       td input[type="date"],
       td textarea,
       td select {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        font-size: 0.95rem;
-        transition: border-color 0.3s, box-shadow 0.3s;
+        width: calc(100% - 4px);
+        margin: 0;
+        padding: 6px 8px;
       }
-      td input[type="text"]:focus,
-      td input[type="date"]:focus,
-      td textarea:focus,
-      td select:focus {
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 5px var(--secondary-color);
-        outline: none;
+
+      /* Ajuste das larguras iniciais das colunas */
+      th:nth-child(1), td:nth-child(1) { /* Fornecedor */
+        width: 188px;
       }
-      td textarea {
-        min-height: 50px;
-        resize: vertical;
+      th:nth-child(2), td:nth-child(2) { /* Viação */
+        width: 188px;
       }
-      td input[name="valor_tarifa"],
-      td input[name="markup"] {
-        pattern: "[0-9.]*";
-        inputmode: "decimal";
+      th:nth-child(3), td:nth-child(3) { /* Centro de Custos */
+        width: 185px;
       }
+      th:nth-child(4), td:nth-child(4) { /* Localizador */
+        width: 178px;
+      }
+      th:nth-child(5), td:nth-child(5) { /* Origem */
+        width: 259px;
+      }
+      th:nth-child(6), td:nth-child(6) { /* Destino */
+        width: 273px;
+      }
+      th:nth-child(7), td:nth-child(7) { /* Ida e Volta */
+        width: 110px;
+      }
+      th:nth-child(8), td:nth-child(8) { /* Solicitante */
+        width: 209px;
+      }
+      th:nth-child(9), td:nth-child(9) { /* Data Oficio */
+        width: 196px;
+      }
+      th:nth-child(10), td:nth-child(10) { /* Emissor */
+        width: 193px;
+      }
+      th:nth-child(11), td:nth-child(11) { /* Nº Oficio */
+        width: 85px;
+      }
+      th:nth-child(12), td:nth-child(12) { /* Passageiro */
+        width: 169px;
+      }
+      th:nth-child(13), td:nth-child(13) { /* Data de ida */
+        width: 172px;
+      }
+      th:nth-child(14), td:nth-child(14) { /* Data de volta */
+        width: 172px;
+      }
+      th:nth-child(15), td:nth-child(15) { /* Valor Tarifa */
+        width: 140px;
+      }
+      th:nth-child(16), td:nth-child(16) { /* MU */
+        width: 140px;
+      }
+      th:nth-child(17), td:nth-child(17) { /* Ações */
+        width: 100px;
+      }
+
       .input-error {
-        border: 2px solid var(--danger-color);
+        border-color: var(--danger) !important;
+        box-shadow: 0 0 0 1px var(--danger) !important;
       }
-      /* Botões de ação externos */
-      .actions {
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-      }
-      .actions button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.3s, transform 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      button.reset-form {
-        background-color: var(--warning-color);
-        color: var(--text-color);
-      }
-      button.reset-form:hover,
-      button.reset-form:focus {
-        background-color: #d2922a;
-        transform: scale(1.02);
-      }
-      button.gerar-xml {
-        background-color: var(--primary-color);
-        color: var(--white);
-      }
-      button.gerar-xml:hover,
-      button.gerar-xml:focus {
-        background-color: #001d3d;
-        transform: scale(1.02);
-      }
-      /* Botões de ação nas linhas */
-      button.remove-row {
-        background-color: var(--danger-color);
-        color: var(--white);
-        border: none;
-        border-radius: 4px;
-        padding: 6px 12px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-      }
-      button.remove-row:hover,
-      button.remove-row:focus {
-        background-color: #c12f2f;
-        transform: scale(1.05);
-      }
-      button.clone-row {
-        background-color: #28a745;
-        color: var(--white);
-        border: none;
-        border-radius: 4px;
-        padding: 6px 12px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        margin-right: 8px;
-      }
-      button.clone-row:hover,
-      button.clone-row:focus {
-        background-color: #218838;
-        transform: scale(1.05);
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
+
+      /* Adicionar estilo para destacar o select quando não selecionado */
+      #clienteSelecionado.not-selected {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 1px var(--danger);
       }
     </style>
   </head>
   <body>
-    <!-- Os scripts com defer garantem execução após o carregamento -->
-    <div id="topHeader">
-      <div id="dateTimeDisplay"></div>
-      <div class="fw-bold">PLUS VIAGENS E TURISMO LTDA</div>
-    </div>
-
-    <main class="container" data-aos="fade-up" role="main">
-      <h1 data-aos="fade-down">Sistema de Integração de TFD</h1>
-      <!-- Cabeçalho do formulário -->
-      <div class="form-header" data-aos="fade-right">
-        <div class="btn-group">
-          <button
-            class="add-row"
-            onclick="addRow()"
-            aria-label="Adicionar linha"
-            title="Adicionar linha"
-          >
-            <i class="fas fa-plus"></i> Adicionar Linha
-          </button>
+    <header id="topHeader">
+      <div class="header-content">
+        <div class="company-info">
+          <i class="fas fa-bus company-logo"></i>
+          <div>
+            <div class="font-weight-bold">PLUS VIAGENS E TURISMO LTDA</div>
+            <div id="dateTimeDisplay" class="text-sm"></div>
+          </div>
         </div>
-        <div class="btn-group">
-          <select id="clienteSelecionado" aria-label="Selecione o cliente">
+        <button class="btn-icon" onclick="toggleDarkMode()">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="content-card">
+        <h1 class="page-title">
+          <i class="fas fa-route"></i>
+          Sistema de Integração de TFD
+        </h1>
+
+        <div class="form-header">
+          <button class="btn btn-primary" onclick="addRow()">
+            <i class="fas fa-plus"></i>
+            Nova Viagem
+          </button>
+          
+          <select id="clienteSelecionado" class="form-select">
+            <option value="" disabled selected>Selecione o TFD que irá gerar a venda:</option>
             <option value="01804">TFD LEM</option>
             <option value="02026">TFD VDC</option>
           </select>
+          
+          <div id="progressIndicator" class="text-white">
+            <i class="fas fa-list-check"></i>
+            Linhas: 0
+          </div>
         </div>
-        <div class="btn-group">
-          <button
-            class="dark-mode-toggle"
-            onclick="toggleDarkMode()"
-            aria-label="Alternar modo escuro"
-            title="Alternar modo escuro"
-          >
-            <i class="fas fa-moon"></i>
+
+        <div class="table-container">
+          <table id="vendasTable" role="table">
+            <thead>
+              <tr role="row">
+                <th>Fornecedor de Emissão</th>
+                <th>Viação Emitida</th>
+                <th>Centro de Custos</th>
+                <th>Localizador</th>
+                <th>Origem</th>
+                <th>Destino</th>
+                <th>Ida e Volta</th>
+                <th>Solicitante</th>
+                <th>Data Oficio</th>
+                <th>Emissor</th>
+                <th>Nº Oficio</th>
+                <th>Passageiro</th>
+                <th>Data de ida</th>
+                <th>Data de volta</th>
+                <th>Valor Tarifa</th>
+                <th>MU</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- As linhas serão adicionadas dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary" onclick="confirmReset()">
+            <i class="fas fa-undo"></i>
+            Resetar Formulário
+          </button>
+          <button class="btn btn-primary" onclick="gerarXML()">
+            <i class="fas fa-file-export"></i>
+            Gerar XML
           </button>
         </div>
-        <div class="progress-indicator" id="progressIndicator" aria-live="polite">
-          Linhas: 0
-        </div>
-      </div>
-      <!-- Tabela -->
-      <div class="table-container" data-aos="fade-left">
-        <table id="vendasTable" role="table" class="table table-striped">
-          <thead>
-            <tr role="row">
-              <th>Fornecedor de Emissão</th>
-              <th>Viação Emitida</th>
-              <th>Centro de Custos</th>
-              <th>Localizador</th>
-              <th>Origem</th>
-              <th>Destino</th>
-              <th>Ida e Volta</th>
-              <th>Solicitante</th>
-              <th>Data Oficio</th>
-              <th>Emissor</th>
-              <th>Nº Oficio</th>
-              <th>Passageiro</th>
-              <th>Data de ida</th>
-              <th>Data de volta</th>
-              <th>Valor Tarifa</th>
-              <th>MU</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- As linhas serão adicionadas dinamicamente -->
-          </tbody>
-        </table>
-      </div>
-      <!-- Botões de ação -->
-      <div class="actions" data-aos="zoom-in">
-        <button
-          class="reset-form"
-          onclick="confirmReset()"
-          aria-label="Resetar formulário"
-          title="Resetar formulário"
-        >
-          <i class="fas fa-undo"></i> Resetar Formulário
-        </button>
-        <button
-          class="gerar-xml"
-          onclick="gerarXML()"
-          aria-label="Gerar XML"
-          title="Gerar XML"
-        >
-          <i class="fas fa-file-code"></i> Gerar XML
-        </button>
       </div>
     </main>
 
@@ -474,6 +610,20 @@
           document.getElementById("progressIndicator").textContent = `Linhas: ${rowCount}`;
         };
 
+        // Atualizar a definição dos campos obrigatórios removendo o Nº Ofício
+        const camposObrigatorios = [
+          { index: 2, nome: "Centro de Custos" },
+          { index: 3, nome: "Localizador" },
+          { index: 4, nome: "Origem" },
+          { index: 5, nome: "Destino" },
+          { index: 7, nome: "Solicitante" },
+          { index: 8, nome: "Data Ofício" },
+          { index: 9, nome: "Emissor" },
+          { index: 11, nome: "Passageiro" },
+          { index: 12, nome: "Data de ida" },
+          { index: 14, nome: "Valor Tarifa" }
+        ];
+
         // ********************
         // DEFINIÇÃO DA FUNÇÃO getCellValue
         // ********************
@@ -498,15 +648,42 @@
         window.validateRows = function () {
           let valid = true;
           const rows = document.querySelectorAll("#vendasTable tbody tr");
-          rows.forEach((row) => {
-            const inputs = row.querySelectorAll("input, textarea");
-            // Campo Valor Tarifa (índice 14)
-            inputs[14].classList.remove("input-error");
-            if (!inputs[14].value.trim()) {
-              inputs[14].classList.add("input-error");
-              valid = false;
+          
+          rows.forEach((row, rowIndex) => {
+            const inputs = row.querySelectorAll("input, textarea, select");
+            
+            // Remove todas as marcações de erro anteriores
+            inputs.forEach(input => input.classList.remove("input-error"));
+            
+            let camposFaltantes = [];
+            
+            camposObrigatorios.forEach(campo => {
+              const input = inputs[campo.index];
+              const valor = input ? input.value.trim() : '';
+              
+              // Debug mais detalhado
+              console.log(`Linha ${rowIndex + 1} - Campo ${campo.nome}:`, {
+                index: campo.index,
+                elemento: input,
+                valor: valor
+              });
+              
+              if (!valor) {
+                if (input) input.classList.add("input-error");
+                camposFaltantes.push(campo.nome);
+                valid = false;
+              }
+            });
+
+            if (camposFaltantes.length > 0) {
+              Swal.fire({
+                title: "Campos Obrigatórios",
+                html: `Por favor, preencha os seguintes campos:<br><br>${camposFaltantes.join("<br>")}`,
+                icon: "warning"
+              });
             }
           });
+          
           return valid;
         };
 
@@ -548,7 +725,7 @@
               element.type = "date";
             } else if (campo === "solicitante") {
               element = document.createElement("textarea");
-              element.rows = 3;
+              element.rows = 1;
             } else if (campo === "emissor") {
               // Cria container para select e input customizado
               const container = document.createElement("div");
@@ -643,27 +820,30 @@
             newRow.appendChild(td);
           });
 
-          // Célula de ações (clonar e remover)
+          // Atualização dos botões de ação
           const tdAcoes = document.createElement("td");
+          tdAcoes.className = "row-actions";
+
           const btnClone = document.createElement("button");
-          btnClone.innerHTML = '<i class="fas fa-clone"></i>';
-          btnClone.classList.add("clone-row");
-          btnClone.setAttribute("aria-label", "Clonar linha");
-          btnClone.title = "Clonar linha";
-          btnClone.style.marginRight = "8px";
+          btnClone.innerHTML = '<i class="fas fa-file-circle-plus"></i>';
+          btnClone.className = "action-btn btn-duplicate";
+          btnClone.setAttribute("aria-label", "Duplicar registro");
+          btnClone.title = "Duplicar registro";
           btnClone.onclick = function () {
             cloneRow(newRow);
           };
+
           const btnRemover = document.createElement("button");
-          btnRemover.innerHTML = '<i class="fas fa-trash"></i>';
-          btnRemover.classList.add("remove-row");
-          btnRemover.setAttribute("aria-label", "Excluir linha");
-          btnRemover.title = "Excluir linha";
+          btnRemover.innerHTML = '<i class="fas fa-file-circle-xmark"></i>';
+          btnRemover.className = "action-btn btn-delete";
+          btnRemover.setAttribute("aria-label", "Excluir registro");
+          btnRemover.title = "Excluir registro";
           btnRemover.onclick = function () {
             newRow.remove();
             updateProgress();
             notyf.success("Linha removida!");
           };
+
           tdAcoes.appendChild(btnClone);
           tdAcoes.appendChild(btnRemover);
           newRow.appendChild(tdAcoes);
@@ -675,20 +855,49 @@
         // Função para clonar uma linha
         window.cloneRow = function (row) {
           const clone = row.cloneNode(true);
+          
+          // Corrigir os botões de ação no clone
           const actionCell = clone.lastElementChild;
-          const cloneBtn = actionCell.querySelector(".clone-row");
-          cloneBtn.onclick = function () {
+          const btnClone = actionCell.querySelector(".btn-duplicate");
+          const btnRemover = actionCell.querySelector(".btn-delete");
+          
+          btnClone.onclick = function () {
             cloneRow(clone);
           };
-          const removeBtn = actionCell.querySelector(".remove-row");
-          removeBtn.onclick = function () {
+          
+          btnRemover.onclick = function () {
             clone.remove();
             updateProgress();
             notyf.success("Linha removida!");
           };
+
+          // Copiar valores dos campos
+          const originalInputs = row.querySelectorAll('input, textarea, select');
+          const cloneInputs = clone.querySelectorAll('input, textarea, select');
+          
+          originalInputs.forEach((input, index) => {
+            if (input.type === 'checkbox') {
+              cloneInputs[index].checked = input.checked;
+            } else if (input.type === 'select-one') {
+              cloneInputs[index].value = input.value;
+              // Se for o select de emissor e estiver como "Outros"
+              if (input.value === 'Outros') {
+                const originalCustomInput = input.parentElement.querySelector('input[name="emissor_custom"]');
+                const cloneCustomInput = cloneInputs[index].parentElement.querySelector('input[name="emissor_custom"]');
+                if (originalCustomInput && cloneCustomInput) {
+                  cloneCustomInput.value = originalCustomInput.value;
+                  cloneCustomInput.style.display = 'block';
+                }
+              }
+            } else {
+              cloneInputs[index].value = input.value;
+            }
+          });
+
+          // Inserir o clone após a linha original
           row.parentNode.insertBefore(clone, row.nextSibling);
           updateProgress();
-          notyf.success("Linha clonada!");
+          notyf.success("Linha clonada com sucesso!");
         };
 
         // Retorna data/hora formatada para nome de arquivos
@@ -752,7 +961,19 @@
         //   preenche Data de volta com a Data de ida.
         window.gerarXML = function () {
           const clienteSelecionado = document.getElementById("clienteSelecionado").value;
+          
+          // Verificar se um TFD foi selecionado
+          if (!clienteSelecionado) {
+            Swal.fire({
+              title: "Atenção",
+              text: "Você esqueceu de selecionar o TFD no qual está emitindo.",
+              icon: "warning"
+            });
+            return;
+          }
+
           const rows = document.querySelectorAll("#vendasTable tbody tr");
+          
           if (rows.length === 0) {
             Swal.fire(
               "Atenção",
@@ -761,27 +982,47 @@
             );
             return;
           }
+          
           if (!validateRows()) {
-            Swal.fire(
-              "Atenção",
-              "Preencha o campo obrigatório: Valor Tarifa.",
-              "warning"
-            );
             return;
           }
+          
           const vendas = [];
           rows.forEach((row) => {
             const cells = row.querySelectorAll("td");
             const inputs = row.querySelectorAll("input, textarea");
-            // Se o cliente for TFD LEM e o campo Fornecedor estiver em branco, usa "F03063"
+            
+            // Lógica para definir o fornecedor baseado no cliente selecionado
             const fornecedorValue = inputs[0].value.trim();
-            const codigoFornecedor =
-              clienteSelecionado === "01804" && !fornecedorValue
-                ? "F03063"
-                : fornecedorValue;
+            let codigoFornecedor;
+            
+            if (!fornecedorValue) {
+              if (clienteSelecionado === "01804") {
+                codigoFornecedor = "F03063";  // TFD LEM
+              } else if (clienteSelecionado === "02026") {
+                codigoFornecedor = "MAXTOUR"; // TFD VDC
+              }
+            } else {
+              codigoFornecedor = fornecedorValue;
+            }
+
+            // Lógica para definir a viação baseado no cliente selecionado
+            const viacaoValue = inputs[1].value.trim();
+            let cia_iata;
+            
+            if (!viacaoValue) {
+              if (clienteSelecionado === "02026") {
+                cia_iata = "ROTA"; // TFD VDC
+              } else {
+                cia_iata = "RAPIDO FEDERAL"; // Valor padrão
+              }
+            } else {
+              cia_iata = viacaoValue;
+            }
+
             const dados = {
               codigo_fornecedor: codigoFornecedor,
-              cia_iata: inputs[1].value || "RAPIDO FEDERAL",
+              cia_iata: cia_iata,
               ccustos_cliente: inputs[2].value || "NAO INFORMADO",
               localizador: inputs[3].value || "",
               origem: inputs[4].value || "",
@@ -1005,7 +1246,120 @@
             }
           }
         });
+
+        // Atualização dos estilos dos botões de ação
+        const style = document.createElement('style');
+        style.textContent = `
+          .clone-row, .remove-row {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+          }
+
+          .clone-row:hover {
+            background-color: #247a3b !important;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+
+          .remove-row:hover {
+            background-color: #c82333 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+
+          .clone-row i, .remove-row i {
+            font-size: 1.1rem;
+          }
+        `;
+        document.head.appendChild(style);
+
+        initializeResizableColumns();
+
+        // Adicionar listener para remover o estilo de erro quando um TFD for selecionado
+        document.getElementById("clienteSelecionado").addEventListener("change", function() {
+          this.classList.remove("not-selected");
+        });
       });
+
+      function initializeResizableColumns() {
+        const table = document.getElementById('vendasTable');
+        const headers = table.querySelectorAll('th');
+        
+        headers.forEach(header => {
+          // Criar e adicionar a alça de redimensionamento
+          const resizeHandle = document.createElement('div');
+          resizeHandle.className = 'resize-handle';
+          header.appendChild(resizeHandle);
+          
+          let isResizing = false;
+          let startX, startWidth;
+          
+          resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.pageX;
+            startWidth = header.offsetWidth;
+            
+            // Adicionar classe para indicar redimensionamento ativo
+            header.classList.add('resizing');
+          });
+          
+          document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            
+            const width = startWidth + (e.pageX - startX);
+            
+            // Limitar largura mínima e máxima
+            if (width >= 100 && width <= 400) {
+              header.style.width = `${width}px`;
+              
+              // Ajustar a largura da coluna correspondente
+              const columnIndex = Array.from(headers).indexOf(header);
+              const cells = table.querySelectorAll(`td:nth-child(${columnIndex + 1})`);
+              cells.forEach(cell => {
+                cell.style.width = `${width}px`;
+              });
+            }
+          });
+          
+          document.addEventListener('mouseup', () => {
+            if (isResizing) {
+              isResizing = false;
+              header.classList.remove('resizing');
+              
+              // Salvar as larguras no localStorage
+              const columnWidths = {};
+              headers.forEach((h, index) => {
+                columnWidths[index] = h.style.width;
+              });
+              localStorage.setItem('columnWidths', JSON.stringify(columnWidths));
+            }
+          });
+        });
+        
+        // Restaurar larguras salvas
+        const savedWidths = localStorage.getItem('columnWidths');
+        if (savedWidths) {
+          const widths = JSON.parse(savedWidths);
+          headers.forEach((header, index) => {
+            if (widths[index]) {
+              header.style.width = widths[index];
+              const cells = table.querySelectorAll(`td:nth-child(${index + 1})`);
+              cells.forEach(cell => {
+                cell.style.width = widths[index];
+              });
+            }
+          });
+        }
+      }
     </script>
   </body>
 </html>
